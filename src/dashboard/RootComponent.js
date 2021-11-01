@@ -49,7 +49,6 @@ export default function RootComponent({logged}) {
 
     return (
         <Router>
-            <Redirect to="/home"/>
             <div className={classes.root}>
                 <CssBaseline/>
                 <AppBar
