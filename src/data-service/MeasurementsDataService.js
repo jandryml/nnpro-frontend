@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsDelete, optionsGet, optionsPost} from "../components/ApiOptions";
 
@@ -12,7 +12,7 @@ const getAllMeasurements = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting data from server");
+            ToastError("Problem with getting data from server");
         });
 };
 
@@ -23,7 +23,7 @@ const deleteMeasurementById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with deleting measurements from server");
+            ToastError("Problem with deleting measurements from server");
             return false;
         });
 };
@@ -38,7 +38,7 @@ const getIntervalMeasurements = async (interval) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting data from server");
+            ToastError("Problem with getting data from server");
         });
 };
 
@@ -49,7 +49,7 @@ const addMeasurements = async (measurements) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Incidents save fail");
+            ToastError("Incidents save fail");
         });
 };
 

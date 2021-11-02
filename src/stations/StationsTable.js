@@ -1,5 +1,4 @@
 import React from "react";
-import {makeStyles, withStyles} from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,22 +6,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
-import EditIcon from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles((theme) => ({
-    seeMore: {
-        marginTop: theme.spacing(3),
-    },
-}));
-
-export default function StationsTable({
-                                          data,
-                                          deleteItemById,
-                                          selectItemId,
-                                      }) {
-    const classes = useStyles();
+export default function StationsTable({data}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -35,33 +22,12 @@ export default function StationsTable({
         setPage(0);
     };
 
-    const CustomColorIconButtonDelete = withStyles({
-        root: {
-            color: "red"
-        }
-    })(IconButton);
-
-    const CustomColorIconButtonEdit = withStyles({
-        root: {
-            color: "orange"
-        }
-    })(IconButton);
-
-    const deleteItem = (id) => {
-        console.log(id);
-        deleteItemById(id);
-    };
-
-    const selectItem = (id) => {
-        selectItemId(id);
-    };
-
-    const emptyRows =
-        rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
     return (
         <React.Fragment>
             <Title>Stations table</Title>
+            <Button component={Link} to="/stations/new">
+                Add new station
+            </Button>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -70,8 +36,6 @@ export default function StationsTable({
                         <TableCell>Region</TableCell>
                         <TableCell>Coordinate X</TableCell>
                         <TableCell>Coordinate Y</TableCell>
-                        <TableCell>Edit</TableCell>
-                        <TableCell align="right">Delete</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -80,25 +44,13 @@ export default function StationsTable({
                     data
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow style={{height: 60}} key={row.id} component={Link}
+                                      to={`/stations/detail/${row.id}`}>
                                 <TableCell>{row.code}</TableCell>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.region.name}</TableCell>
                                 <TableCell>{row.x}</TableCell>
                                 <TableCell>{row.y}</TableCell>
-                                <TableCell>
-                                    <CustomColorIconButtonEdit variant="contained"
-                                                               onClick={selectItem.bind(this, row.id)} color="primary">
-                                        <EditIcon/>
-                                    </CustomColorIconButtonEdit>
-                                </TableCell>
-                                <TableCell>
-                                    <CustomColorIconButtonDelete variant="contained"
-                                                                 onClick={deleteItem.bind(this, row.id)}
-                                                                 color="primary">
-                                        <DeleteForeverIcon/>
-                                    </CustomColorIconButtonDelete>
-                                </TableCell>
                             </TableRow>
                         ))}
                 </TableBody>

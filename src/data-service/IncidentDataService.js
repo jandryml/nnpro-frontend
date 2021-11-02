@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsDelete, optionsGet, optionsPost} from "../components/ApiOptions";
 
@@ -12,7 +12,7 @@ const getAllIncidents = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting incidents from server");
+            ToastError("Problem with getting incidents from server");
         });
 };
 
@@ -23,7 +23,7 @@ const deleteIncidentById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with deleting incident from server");
+            ToastError("Problem with deleting incident from server");
             return false;
         });
 };
@@ -35,7 +35,7 @@ const getIncidentById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting incident from server");
+            ToastError("Problem with getting incident from server");
             return false;
         });
 };
@@ -47,7 +47,7 @@ const addIncident = async (incident) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Incident save fail");
+            ToastError("Incident save fail");
         });
 };
 

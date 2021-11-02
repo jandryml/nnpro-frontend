@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsDelete, optionsGet, optionsPost} from "../components/ApiOptions";
 
@@ -12,7 +12,7 @@ const getAllStations = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting all stations from server");
+            ToastError("Problem with getting all stations from server");
         });
 };
 
@@ -23,7 +23,7 @@ const deleteStationById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with deleting measurements from server");
+            ToastError("Problem with deleting station, check for dependencies");
             return false;
         });
 };
@@ -35,19 +35,19 @@ const getStationById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting station from server");
+            ToastError("Problem with getting station from server");
             return false;
         });
 };
 
-const addStation = async (station) => {
+const saveStation = async (station) => {
     return axios(optionsPost(station, "/api/station"))
         .then((res) => {
             return res.data;
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Station save fail");
+            ToastError("Station save fail");
         });
 };
 
@@ -55,5 +55,5 @@ export {
     getAllStations,
     deleteStationById,
     getStationById,
-    addStation,
+    saveStation,
 };

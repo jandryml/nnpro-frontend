@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsGet} from "../components/ApiOptions";
 
@@ -9,7 +9,7 @@ const getRegions = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Regions not found");
+            ToastError("Regions not found");
         });
 };
 

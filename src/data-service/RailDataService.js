@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsDelete, optionsGet, optionsPost} from "../components/ApiOptions";
 
@@ -12,7 +12,7 @@ const getAllRails = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with stations from server");
+            ToastError("Problem with stations from server");
         });
 };
 
@@ -23,7 +23,7 @@ const deleteRailById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with deleting rail from server");
+            ToastError("Problem with deleting rail from server");
             return false;
         });
 };
@@ -35,7 +35,7 @@ const getRailById = async (id) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Problem with getting measurements from server");
+            ToastError("Problem with getting measurements from server");
             return false;
         });
 };
@@ -47,7 +47,7 @@ const addRail = async (rail) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Rail save fail");
+            ToastError("Rail save fail");
         });
 };
 

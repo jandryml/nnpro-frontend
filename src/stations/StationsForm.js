@@ -3,6 +3,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {withRouter} from "react-router-dom";
+
+import {deleteStationById, getStationById, saveStation} from "../data-service/StationDataService";
+import {getRegions} from "../data-service/RegionDataService";
+import {ToastInfo} from "../components/ToastError";
 
 makeStyles((theme) => ({
     container: {
@@ -16,68 +21,56 @@ makeStyles((theme) => ({
     },
 }));
 
-function StationsForm({
-                          regions,
-                          saveStation,
-                          editItemData,
-                          getAllStations,
-                      }) {
+function StationsForm({isNew, match, history}) {
 
-    const [id, setId] = useState(null);
-    const [code, setCode] = useState(null);
-    const [name, setName] = useState(null);
-    const [region, setRegion] = useState(1);
-    const [x, setX] = useState(null);
-    const [y, setY] = useState(null);
-    const [selectedId, setSelectedId] = useState('');
-
+    const [regions, setRegions] = useState([]);
+    const [station, setStation] = useState({
+        id: -1,
+        code: "",
+        name: "",
+        region: {
+            id: 1
+        },
+        x: 0,
+        y: 0
+    });
 
     useEffect(() => {
-        if (editItemData) {
-            setId(editItemData.id);
-            setCode(editItemData.code);
-            setName(editItemData.name);
-            setRegion(editItemData.region);
-            setX(editItemData.x);
-            setY(editItemData.y);
-            setSelectedId(editItemData.region.id)
-        }
-    }, [editItemData]);
+        getRegions().then((regions) => {
+            setRegions(regions)
+        });
 
-    const submit = () => {
-        saveStation({
-            id,
-            code,
-            name,
-            region,
-            x,
-            y
+        !isNew && getStationById(match.params.id).then((data) => {
+            setStation(data);
+        });
+    }, [match.params.id]);
+
+    const handleSubmit = () => {
+        saveStation(station).then((res) => {
+            if (res) {
+                history.push("/stations");
+                ToastInfo("Station successfully created");
+            }
         });
     };
 
-    const submitEdit = () => {
-        saveStation({
-            code,
-            name,
-            region,
-            x,
-            y
+    const handleDelete = () => {
+        deleteStationById(station.id).then((res) => {
+            if (res) {
+                history.push("/stations");
+                ToastInfo("Station successfully removed");
+            }
         });
     };
 
-    const load = () => {
-        getAllStations();
-    };
-
-    const handleChange = (event) => {
-        let region = regions.filter((region) => region.id === event.target.value)[0]
-        setRegion(region);
-        setSelectedId(event.target.value)
-    };
+    const handleChange = event => {
+        const {value, name} = event.target;
+        setStation({...station, [name]: value})
+    }
 
     return (
         <div className="container">
-            <h1>Stations</h1>
+            <h1>Station detail</h1>
             <div>
                 <TextField
                     required
@@ -86,9 +79,9 @@ function StationsForm({
                     label="Code"
                     name="code"
                     fullWidth={true}
-                    value={code || ''}
+                    value={station && station.code ? station.code : ''}
                     type="textField"
-                    onChange={(e) => setCode(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <TextField
                     required
@@ -97,21 +90,21 @@ function StationsForm({
                     label="Name"
                     name="name"
                     fullWidth={true}
-                    value={name || ''}
+                    value={station && station.name ? station.name : ''}
                     type="textField"
-                    onChange={(e) => setName(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Region</InputLabel>
                     <Select
                         labelId="region"
-                        id="region"
-                        value={selectedId}
+                        value={station && station.region.id}
                         label="Region"
-                        onChange={handleChange}
+                        onChange={(event) => {
+                            setStation({...station, region: {...station.region, id: event.target.value}});
+                        }}
                     >
                         {regions &&
-                        regions.size !== 0 &&
                         regions
                             .map((region) => (
                                 <MenuItem key={region.id} value={region.id}>{region.name}</MenuItem>
@@ -120,61 +113,55 @@ function StationsForm({
                 </FormControl>
                 <TextField
                     required
-                    id="x"
                     margin="normal"
                     label="Coordinate X"
                     name="x"
                     type="number"
                     fullWidth={true}
-                    value={x || ''}
-                    onChange={(e) => setX(!e.target.value ? null : e.target.value)}
+                    value={station && station.x ? station.x : 0}
+                    onChange={handleChange}
                 />
                 <TextField
                     required
                     margin="normal"
-                    id="y"
                     label="Coordinate Y"
                     name="y"
                     type="number"
                     fullWidth={true}
-                    value={y || ''}
-                    onChange={(e) => setY(!e.target.value ? null : e.target.value)}
+                    value={station && station.y ? station.y : 0}
+                    onChange={handleChange}
                 />
             </div>
             <div className="container-flex">
                 <Button
                     type="submit"
-                    margin="normal"
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                     fullWidth={true}
-                    onClick={submit}
-                    disabled={!id}
+                    onClick={handleSubmit}
                 >
-                    Edit
+                    Save
                 </Button>
                 <Button
                     type="submit"
-                    margin="normal"
+                    variant="contained"
+                    color="secondary"
+                    fullWidth={true}
+                    onClick={() => history.push("/stations")}
+                >Back</Button>
+                {!isNew && <Button
+                    type="submit"
                     variant="contained"
                     color="default"
                     fullWidth={true}
-                    onClick={submitEdit}
+                    onClick={handleDelete}
                 >
-                    New
-                </Button>
+                    Delete
+                </Button>}
+
             </div>
-            {/*            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={load}
-                fullWidth={true}
-            >
-                Load
-            </Button>*/}
         </div>
     );
 }
 
-export default StationsForm;
+export default withRouter(StationsForm);

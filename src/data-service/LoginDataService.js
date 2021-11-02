@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsPost} from "../components/ApiOptions";
 
@@ -10,7 +10,7 @@ const login = async (credentials) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Credentials are not valid");
+            ToastError("Credentials are not valid");
         });
 };
 

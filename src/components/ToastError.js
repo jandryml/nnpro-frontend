@@ -1,7 +1,7 @@
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ToastMe = (text) => {
+export const ToastError = (text) => {
     toast.error(text, {
         position: "bottom-center",
         autoClose: 5000,
@@ -13,4 +13,14 @@ const ToastMe = (text) => {
     });
 };
 
-export default ToastMe;
+export const ToastInfo = (text) => {
+    toast.info(text, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+};

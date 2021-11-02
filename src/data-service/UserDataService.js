@@ -1,4 +1,4 @@
-import ToastMe from "../components/ToastMe";
+import {ToastError} from "../components/ToastError";
 import axios from "axios";
 import {optionsGet, optionsPost} from "../components/ApiOptions";
 
@@ -9,7 +9,7 @@ const getUser = async () => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("User was not found");
+            ToastError("User was not found");
         });
 };
 
@@ -20,7 +20,7 @@ const addUser = async (userInfo) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Register failed");
+            ToastError("Register failed");
             return false;
         });
 };
@@ -32,7 +32,7 @@ const editUser = async (userInfo) => {
         })
         .catch((error) => {
             console.error(error);
-            ToastMe("Editing failed");
+            ToastError("Editing failed");
             return false;
         });
 };
