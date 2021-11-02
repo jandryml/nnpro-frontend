@@ -99,7 +99,7 @@ export default function RootComponent({logged}) {
                     </div>
                     <Divider/>
                     <List>
-                        <ListItem button component={Link} to="/home">
+                        <ListItem button component={Link} to="/">
                             <ListItemIcon>
                                 <HomeIcon/>
                             </ListItemIcon>
@@ -135,7 +135,7 @@ export default function RootComponent({logged}) {
                     <div className={classes.appBarSpacer}/>
                     <Container maxWidth="lg" className={classes.container}>
                         <Switch>
-                            <Route exact path="/home">
+                            <Route exact path="/">
                                 <Home/>
                             </Route>
                             <Route exact path="/stations">

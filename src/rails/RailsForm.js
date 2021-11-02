@@ -182,13 +182,13 @@ function RailsForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
-            <MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
+            { !isNew &&<MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
                           markers={[
                               {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
                               {lat: rail.targetStation.x, lng: rail.targetStation.y}]}
                             trainPath={[
                                 {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                                {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>
+                                {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
         </div>
     );
 }
