@@ -31,6 +31,7 @@ import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStati
 import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import StationsForm from "../stations/StationsForm";
+import RailsForm from "../rails/RailsForm";
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
@@ -147,6 +148,12 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/rails">
                                 <Rails/>
+                            </Route>
+                            <Route exact path="/rails/detail/:id">
+                                <RailsForm/>
+                            </Route>
+                            <Route exact path="/rails/new">
+                                <RailsForm isNew={true}/>
                             </Route>
                             <Route exact path="/incidents">
                                 <Incidents/>

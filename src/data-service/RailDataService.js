@@ -40,7 +40,7 @@ const getRailById = async (id) => {
         });
 };
 
-const addRail = async (rail) => {
+const saveRail = async (rail) => {
     return axios(optionsPost(rail, "/api/rail"))
         .then((res) => {
             return res.data;
@@ -55,5 +55,5 @@ export {
     getAllRails,
     deleteRailById,
     getRailById,
-    addRail,
+    saveRail,
 };

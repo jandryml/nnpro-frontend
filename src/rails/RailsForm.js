@@ -3,6 +3,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {withRouter} from "react-router-dom";
+
+import {deleteRailById, getRailById, saveRail} from "../data-service/RailDataService";
+import {getAllStations} from "../data-service/StationDataService";
+import {ToastInfo} from "../components/ToastError";
 
 makeStyles((theme) => ({
     container: {
@@ -16,81 +21,54 @@ makeStyles((theme) => ({
     },
 }));
 
-function RailsForm({
-                       stations,
-                       saveRail,
-                       editItemData,
-                       getAllRails,
-                   }) {
+function RailsForm({isNew, match, history}) {
 
-    const [id, setId] = useState(null);
-    const [code, setCode] = useState(null);
-    const [name, setName] = useState(null);
-    const [sourceStation, setSourceStation] = useState(1);
-    const [targetStation, setTargetStation] = useState(2);
-    const [enabled, setEnabled] = useState(null);
-
-    const [sourceStationId, setSourceStationId] = useState('');
-    const [targetStationId, setTargetStationId] = useState('');
-    const [enabledId, setEnabledId] = useState(0);
+    const [stations, setStations] = useState([]);
+    const [rail, setRail] = useState({
+        id: -1,
+        code: "",
+        name: "",
+        sourceStation: {
+            id: 1
+        },
+        targetStation: {
+            id: 1
+        },
+        enabled: true
+    });
 
     useEffect(() => {
-        if (editItemData) {
-            setId(editItemData.id);
-            setCode(editItemData.code);
-            setName(editItemData.name);
-            setSourceStation(editItemData.sourceStation);
-            setTargetStation(editItemData.targetStation);
-            setEnabled(editItemData.enabled);
+        getAllStations().then((data) => {
+            setStations(data)
+        });
 
-            setEnabledId(editItemData.enabled === false ? 1 : 0)
-            setSourceStationId(editItemData.sourceStation.id)
-            setTargetStationId(editItemData.targetStation.id)
-        }
-    }, [editItemData]);
+        !isNew && getRailById(match.params.id).then((data) => {
+            setRail(data);
+        });
+    }, [match.params.id]);
 
-    const submit = () => {
-        saveRail({
-            id,
-            code,
-            name,
-            sourceStation,
-            targetStation,
-            enabled
+    const handleSubmit = () => {
+        saveRail(rail).then((res) => {
+            if (res) {
+                history.push("/rails");
+                ToastInfo("Rail successfully created");
+            }
         });
     };
 
-    const submitEdit = () => {
-        saveRail({
-            code,
-            name,
-            sourceStation,
-            targetStation,
-            enabled
+    const handleDelete = () => {
+        deleteRailById(rail.id).then((res) => {
+            if (res) {
+                history.push("/rails");
+                ToastInfo("Rail successfully removed");
+            }
         });
     };
-
-    const load = () => {
-        getAllRails();
-    };
-
-    const handleChangeEnabled = (event) => {
-        setEnabled(event.target.value === 0);
-        setEnabledId(event.target.value)
+    const handleChange = event => {
+        const {value, name} = event.target;
+        setRail({...rail, [name]: value})
+        console.log(rail)
     }
-
-    const handleChangeSourceStation = (event) => {
-        let station = stations.filter((station) => station.id === event.target.value)[0]
-        setSourceStation(station);
-        setSourceStationId(event.target.value)
-    }
-
-    const handleChangeTargetStation = (event) => {
-        let station = stations.filter((station) => station.id === event.target.value)[0]
-        setTargetStation(station);
-        setTargetStationId(event.target.value)
-    }
-
 
     return (
         <div className="container">
@@ -103,9 +81,9 @@ function RailsForm({
                     label="Code"
                     name="code"
                     fullWidth={true}
-                    value={code || ''}
+                    value={rail && rail.code ? rail.code : ''}
                     type="textField"
-                    onChange={(e) => setCode(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <TextField
                     required
@@ -114,9 +92,9 @@ function RailsForm({
                     label="Name"
                     name="name"
                     fullWidth={true}
-                    value={name || ''}
+                    value={rail && rail.name ? rail.name : ''}
                     type="textField"
-                    onChange={(e) => setName(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <div className="container-flex">
                     <FormControl fullWidth>
@@ -124,9 +102,11 @@ function RailsForm({
                         <Select
                             labelId="sourceStation"
                             id="sourceStation"
-                            value={sourceStationId}
+                            value={rail.sourceStation.id}
                             label="Source station"
-                            onChange={handleChangeSourceStation}
+                            onChange={(event) => {
+                                setRail({...rail, sourceStation: {id: event.target.value}});
+                            }}
                         >
                             {stations &&
                             stations.size !== 0 &&
@@ -143,9 +123,11 @@ function RailsForm({
                         <Select
                             labelId="targetStation"
                             id="targetStation"
-                            value={targetStationId}
+                            value={rail.targetStation.id}
                             label="Target station"
-                            onChange={handleChangeTargetStation}
+                            onChange={(event) => {
+                                setRail({...rail, targetStation: {id: event.target.value}});
+                            }}
                         >
                             {stations &&
                             stations.size !== 0 &&
@@ -162,13 +144,13 @@ function RailsForm({
                         <Select
                             labelId="enabled"
                             id="enabled"
-                            value={enabledId}
+                            value={rail ? rail.enabled : false}
                             label="Enabled"
-                            onChange={handleChangeEnabled}
-
+                            name="enabled"
+                            onChange={handleChange}
                         >
-                            <MenuItem key={1} value={0}>Activated</MenuItem>
-                            <MenuItem key={2} value={1}>Deactivated</MenuItem>
+                            <MenuItem key={1} value={true}>True</MenuItem>
+                            <MenuItem key={2} value={false}>False</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
@@ -176,38 +158,32 @@ function RailsForm({
             <div className="container-flex">
                 <Button
                     type="submit"
-                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    fullWidth={true}
+                    onClick={handleSubmit}
+                >
+                    Save
+                </Button>
+                <Button
+                    type="submit"
                     variant="contained"
                     color="secondary"
                     fullWidth={true}
-                    onClick={submit}
-                    disabled={!id}
-                >
-                    Edit
-                </Button>
-                <br/>
-                <Button
+                    onClick={() => history.push("/rails")}
+                >Back</Button>
+                {!isNew && <Button
                     type="submit"
-                    margin="normal"
                     variant="contained"
                     color="default"
                     fullWidth={true}
-                    onClick={submitEdit}
+                    onClick={handleDelete}
                 >
-                    New
-                </Button>
+                    Delete
+                </Button>}
             </div>
-            {/*            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={load}
-                fullWidth={true}
-            >
-                Load
-            </Button>*/}
         </div>
     );
 }
 
-export default RailsForm;
+export default withRouter(RailsForm);
