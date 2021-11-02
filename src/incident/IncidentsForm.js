@@ -63,7 +63,7 @@ function IncidentsForm({isNew, match, history}) {
                 startDate: data.startDate.substring(0, 16),
                 endDate: data.endDate ? data.endDate.substring(0, 16) : getDateTime()
             });
-        }).then(() => (console.log(incident)));
+        });
     }, [match.params.id]);
 
     const handleSubmit = () => {

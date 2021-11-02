@@ -67,7 +67,6 @@ function RailsForm({isNew, match, history}) {
     const handleChange = event => {
         const {value, name} = event.target;
         setRail({...rail, [name]: value})
-        console.log(rail)
     }
 
     return (

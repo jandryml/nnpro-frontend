@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import {getUser} from "../data-service/UserDataService";
+import {editUser,  getUser} from "../data-service/UserDataService";
 
 function Profile() {
     const [id, setId] = useState();
@@ -23,11 +23,11 @@ function Profile() {
         getActualUser();
     }, []);
 
-    const saveProfileChanges = () => {
-        /*editUser({
-            id, username, firstName, lastName, emailAddress
-        })*/
-    }
+    // const saveProfileChanges = () => {
+    //     editUser({
+    //         id, emailAddress
+    //     })
+    // }
 
     return (
         <div>
@@ -71,16 +71,16 @@ function Profile() {
                 disabled={true}
                 onChange={(e) => setRole(e.target.value)}
             />
-            <Button
-                id="saveProfileDataButton"
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="default"
-                onClick={saveProfileChanges}
-            >
-                Save
-            </Button>
+            {/*<Button*/}
+            {/*    id="saveProfileDataButton"*/}
+            {/*    type="submit"*/}
+            {/*    fullWidth*/}
+            {/*    variant="contained"*/}
+            {/*    color="default"*/}
+            {/*    onClick={saveProfileChanges}*/}
+            {/*/!*>*!/*/}
+            {/*    Save*/}
+            {/*</Button>*/}
         </div>
     );
 }
