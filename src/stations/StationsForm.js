@@ -8,6 +8,7 @@ import {withRouter} from "react-router-dom";
 import {deleteStationById, getStationById, saveStation} from "../data-service/StationDataService";
 import {getRegions} from "../data-service/RegionDataService";
 import {ToastInfo} from "../components/ToastError";
+import {MapComponent} from "../components/MapComponent";
 
 makeStyles((theme) => ({
     container: {
@@ -158,8 +159,8 @@ function StationsForm({isNew, match, history}) {
                 >
                     Delete
                 </Button>}
-
             </div>
+            <MapComponent center={{lat: station.x, lng: station.y}} markers={[{lat: station.x, lng: station.y}]}/>
         </div>
     );
 }

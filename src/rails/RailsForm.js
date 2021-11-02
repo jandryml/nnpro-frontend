@@ -8,6 +8,7 @@ import {withRouter} from "react-router-dom";
 import {deleteRailById, getRailById, saveRail} from "../data-service/RailDataService";
 import {getAllStations} from "../data-service/StationDataService";
 import {ToastInfo} from "../components/ToastError";
+import {MapComponent} from "../components/MapComponent";
 
 makeStyles((theme) => ({
     container: {
@@ -181,6 +182,13 @@ function RailsForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
+            <MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
+                          markers={[
+                              {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                              {lat: rail.targetStation.x, lng: rail.targetStation.y}]}
+                            trainPath={[
+                                {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                                {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>
         </div>
     );
 }
