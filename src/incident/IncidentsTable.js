@@ -10,6 +10,8 @@ import Title from "../dashboard/Title";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
     seeMore: {
@@ -31,11 +33,7 @@ const transformDateTime = (datetime) => {
     return day + ". " + month + ". " + year + " " + hours + ":" + minutes
 }
 
-export default function IncidentsTable({
-                                           data,
-                                           deleteItemById,
-                                           selectItemId,
-                                       }) {
+export default function IncidentsTable({data}) {
     useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -49,33 +47,12 @@ export default function IncidentsTable({
         setPage(0);
     };
 
-    const CustomColorIconButtonDelete = withStyles({
-        root: {
-            color: "red"
-        }
-    })(IconButton);
-
-    const CustomColorIconButtonEdit = withStyles({
-        root: {
-            color: "orange"
-        }
-    })(IconButton);
-
-    const deleteItem = (id) => {
-        console.log(id);
-        deleteItemById(id);
-    };
-
-    const selectItem = (id) => {
-        selectItemId(id);
-    };
-
-    const emptyRows =
-        rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
     return (
         <React.Fragment>
-            <Title>Stations table</Title>
+            <Title>Incident table</Title>
+            <Button component={Link} to="/incidents/new">
+                Add new incident
+            </Button>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -86,8 +63,6 @@ export default function IncidentsTable({
                         <TableCell>Start date</TableCell>
                         <TableCell>End date</TableCell>
                         <TableCell>Reported by</TableCell>
-                        <TableCell>Edit</TableCell>
-                        <TableCell>Delete</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -96,27 +71,15 @@ export default function IncidentsTable({
                     data
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow style={{height: 60}} key={row.id} component={Link}
+                                      to={`/incidents/detail/${row.id}`}>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.description}</TableCell>
                                 <TableCell>{row.severity}</TableCell>
                                 <TableCell>{row.affectedRail.name}</TableCell>
                                 <TableCell>{transformDateTime(row.startDate)}</TableCell>
-                                <TableCell>{transformDateTime(row.endDate)}</TableCell>
+                                <TableCell>{row.endDate ? transformDateTime(row.endDate) : ''}</TableCell>
                                 <TableCell>{row.reportedBy.username}</TableCell>
-                                <TableCell>
-                                    <CustomColorIconButtonEdit variant="contained"
-                                                               onClick={selectItem.bind(this, row.id)} color="primary">
-                                        <EditIcon/>
-                                    </CustomColorIconButtonEdit>
-                                </TableCell>
-                                <TableCell>
-                                    <CustomColorIconButtonDelete variant="contained"
-                                                                 onClick={deleteItem.bind(this, row.id)}
-                                                                 color="primary">
-                                        <DeleteForeverIcon/>
-                                    </CustomColorIconButtonDelete>
-                                </TableCell>
                             </TableRow>
                         ))}
                 </TableBody>

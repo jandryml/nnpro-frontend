@@ -40,7 +40,7 @@ const getIncidentById = async (id) => {
         });
 };
 
-const addIncident = async (incident) => {
+const saveIncident = async (incident) => {
     return axios(optionsPost(incident, "/api/incident"))
         .then((res) => {
             return res.data;
@@ -55,5 +55,5 @@ export {
     getAllIncidents,
     deleteIncidentById,
     getIncidentById,
-    addIncident,
+    saveIncident,
 };

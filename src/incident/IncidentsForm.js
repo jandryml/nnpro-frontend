@@ -3,6 +3,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {withRouter} from "react-router-dom";
+
+import {deleteIncidentById, getIncidentById, saveIncident} from "../data-service/IncidentDataService";
+import {getAllRails} from "../data-service/RailDataService";
+import {ToastInfo} from "../components/ToastError";
 
 makeStyles((theme) => ({
     container: {
@@ -18,7 +23,7 @@ makeStyles((theme) => ({
 
 const getDateTime = () => {
     let newDate = new Date()
-    newDate.addHours(2)
+    newDate.addHours(1)
     return newDate.toISOString().substring(0, 17) + "00"
 }
 
@@ -28,102 +33,59 @@ Date.prototype.addHours = function (h) {
     return this;
 }
 
-const getSeverityId = (severity) => {
-    switch (severity) {
-        case "MINOR":
-            return 0
-        case "MAJOR":
-            return 1
-        default:
-            return 2
-    }
-}
+function IncidentsForm({isNew, match, history}) {
 
-const getSeverityById = (id) => {
-    switch (id) {
-        case 0:
-            return "MINOR"
-        case 1:
-            return "MAJOR"
-        default:
-            return "FATAL"
-    }
-}
-
-function IncidentsForm({
-                           rails,
-                           saveIncident,
-                           editItemData,
-                           getAllRails,
-                       }) {
-
-    const [id, setId] = useState(null);
-    const [name, setName] = useState(null);
-    const [description, setDescription] = useState(null);
-    const [severity, setSeverity] = useState(null);
-    const [affectedRail, setAffectedRail] = useState(null);
-    const [startDate, setStartDate] = useState(getDateTime());
-    const [endDate, setEndDate] = useState(getDateTime());
-
-    const [affectedRailId, setAffectedRailId] = useState('');
-    const [severityId, setSeverityId] = useState(0);
+    const [rails, setRails] = useState([]);
+    const [incident, setIncident] = useState({
+        id: -1,
+        name: "",
+        description: "",
+        severity: "MINOR",
+        affectedRail: {
+            id: 1
+        },
+        // TODO send userID
+        // reportedBy: {
+        //     id: 1
+        // },
+        startDate: getDateTime(),
+        endDate: getDateTime()
+    });
 
     useEffect(() => {
-        if (editItemData) {
-            setId(editItemData.id);
-            setName(editItemData.name);
-            setDescription(editItemData.description);
+        getAllRails().then((data) => {
+            setRails(data)
+        });
 
-            setSeverity(editItemData.severity);
-            setAffectedRail(editItemData.affectedRail);
-            setStartDate(editItemData.startDate.substring(0, 16))
-            setEndDate(editItemData.endDate.substring(0, 16))
+        !isNew && getIncidentById(match.params.id).then((data) => {
+            setIncident({
+                ...data,
+                startDate: data.startDate.substring(0, 16),
+                endDate: data.endDate ? data.endDate.substring(0, 16) : getDateTime()
+            });
+        }).then(() => (console.log(incident)));
+    }, [match.params.id]);
 
-            setSeverityId(getSeverityId(editItemData.severity))
-            setAffectedRailId(editItemData.affectedRail.id)
-        }
-    }, [editItemData]);
-
-    const submit = () => {
-        saveIncident({
-            id,
-            name,
-            description,
-            severity,
-            affectedRail,
-            startDate,
-            endDate
+    const handleSubmit = () => {
+        saveIncident(incident).then((res) => {
+            if (res) {
+                history.push("/incidents");
+                ToastInfo("Incident successfully created");
+            }
         });
     };
 
-    const submitEdit = () => {
-        saveIncident({
-            name,
-            description,
-            severity,
-            affectedRail,
-            startDate,
-            endDate
+    const handleDelete = () => {
+        deleteIncidentById(incident.id).then((res) => {
+            if (res) {
+                history.push("/incidents");
+                ToastInfo("Incident successfully removed");
+            }
         });
     };
-
-    const load = () => {
-        getAllRails();
-    };
-
-    const handleChangeSeverity = (event) => {
-        setSeverity(getSeverityById(event.target.value));
-        setSeverityId(event.target.value)
-    }
-
-    const handleChangeAffectedRail = (event) => {
-        let rail = rails.filter((station) => station.id === event.target.value)[0]
-        setAffectedRail(rail);
-        setAffectedRailId(event.target.value)
-    }
-
-    const setStartDateA = (value) => {
-        console.log(value)
+    const handleChange = event => {
+        const {value, name} = event.target;
+        setIncident({...incident, [name]: value})
     }
 
     return (
@@ -132,38 +94,35 @@ function IncidentsForm({
             <div>
                 <TextField
                     required
-                    id="name"
                     margin="normal"
                     label="Name"
                     name="name"
                     fullWidth={true}
-                    value={name || ''}
+                    value={incident && incident.name ? incident.name : ''}
                     type="textField"
-                    onChange={(e) => setName(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <TextField
                     required
-                    id="description"
                     margin="normal"
                     label="Description"
                     name="description"
                     fullWidth={true}
-                    value={description || ''}
+                    value={incident && incident.description ? incident.description : ''}
                     type="textField"
-                    onChange={(e) => setDescription(!e.target.value ? null : e.target.value)}
+                    onChange={handleChange}
                 />
                 <FormControl fullWidth>
                     <InputLabel id="severityLabel">Severity</InputLabel>
                     <Select
-                        labelId="severity"
-                        id="severity"
-                        value={severityId}
+                        value={incident ? incident.severity : "MINOR"}
                         label="Severity"
-                        onChange={handleChangeSeverity}
+                        name="severity"
+                        onChange={handleChange}
                     >
-                        <MenuItem key={0} value={0}>{"MINOR"}</MenuItem>
-                        <MenuItem key={1} value={1}>{"MAJOR"}</MenuItem>
-                        <MenuItem key={2} value={2}>{"FATAL"}</MenuItem>
+                        <MenuItem value="MINOR">MINOR</MenuItem>
+                        <MenuItem value="MAJOR">MAJOR</MenuItem>
+                        <MenuItem value="FATAL">FATAL</MenuItem>
                     </Select>
                 </FormControl>
                 <FormControl fullWidth>
@@ -171,27 +130,28 @@ function IncidentsForm({
                     <Select
                         labelId="affectedRail"
                         id="affectedRail"
-                        value={affectedRailId}
+                        value={incident.affectedRail.id}
                         label="Enabled"
-                        onChange={handleChangeAffectedRail}
+                        onChange={(event) => {
+                            setIncident({...incident, affectedRail: {id: event.target.value}});
+                        }}
                     >
                         {rails &&
                         rails.size !== 0 &&
-                        rails
-                            .map((rail) => (
-                                <MenuItem key={rail.id} value={rail.id}>{rail.name}</MenuItem>
-                            ))}
+                        rails.map((rail) => (
+                            <MenuItem key={rail.id} value={rail.id}>{rail.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <TextField
                     required
                     margin="normal"
-                    id="startDate"
                     label="Start date"
                     type="datetime-local"
-                    value={startDate}
+                    name="startDate"
+                    value={incident.startDate}
                     fullWidth={true}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={handleChange}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -199,12 +159,12 @@ function IncidentsForm({
                 <TextField
                     required
                     margin="normal"
-                    id="endDate"
                     label="End date"
                     type="datetime-local"
-                    value={endDate}
+                    name="endDate"
+                    value={incident.endDate}
                     fullWidth={true}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    onChange={handleChange}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -213,37 +173,28 @@ function IncidentsForm({
             <div className="container-flex">
                 <Button
                     type="submit"
-                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    fullWidth={true}
+                    onClick={handleSubmit}
+                >Save</Button>
+                <Button
+                    type="submit"
                     variant="contained"
                     color="secondary"
                     fullWidth={true}
-                    onClick={submit}
-                    disabled={!id}
-                >
-                    Edit
-                </Button>
-                <Button
+                    onClick={() => history.push("/incidents")}
+                >Back</Button>
+                {!isNew && <Button
                     type="submit"
-                    margin="normal"
                     variant="contained"
                     color="default"
                     fullWidth={true}
-                    onClick={submitEdit}
-                >
-                    New
-                </Button>
+                    onClick={handleDelete}
+                >Delete</Button>}
             </div>
-            {/*            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={load}
-                fullWidth={true}
-            >
-                Load
-            </Button>*/}
         </div>
     );
 }
 
-export default IncidentsForm;
+export default withRouter(IncidentsForm);
