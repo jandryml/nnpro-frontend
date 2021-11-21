@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {withRouter} from "react-router-dom";
-
 import {deleteRailById, getRailById, saveRail} from "../data-service/RailDataService";
 import {getAllStations} from "../data-service/StationDataService";
 import {ToastInfo} from "../components/ToastError";
@@ -109,7 +108,7 @@ function RailsForm({isNew, match, history}) {
                             }}
                         >
                             {stations &&
-                            stations.size !== 0 &&
+                            stations.length !== 0 &&
                             stations
                                 .map((station) => (
                                     <MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>
@@ -130,7 +129,7 @@ function RailsForm({isNew, match, history}) {
                             }}
                         >
                             {stations &&
-                            stations.size !== 0 &&
+                            stations.length !== 0 &&
                             stations
                                 .map((station) => (
                                     <MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>
@@ -182,13 +181,13 @@ function RailsForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
-            { !isNew &&<MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
-                          markers={[
-                              {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                              {lat: rail.targetStation.x, lng: rail.targetStation.y}]}
-                            trainPath={[
-                                {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                                {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
+            {!isNew && <MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
+                                     markers={[
+                                         {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                                         {lat: rail.targetStation.x, lng: rail.targetStation.y}]}
+                                     trainPath={[
+                                         {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                                         {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
         </div>
     );
 }

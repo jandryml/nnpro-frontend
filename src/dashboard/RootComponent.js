@@ -23,18 +23,23 @@ import Incidents from "../incident/Incidents";
 import Profile from "../profile/Profile";
 import HomeIcon from '@material-ui/icons/Home';
 import useStyles from "./DashBoardStyles";
-import {BrowserRouter as Router, Link, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Stations from "../stations/Stations";
 import Rails from "../rails/Rails";
 import RailwayAlertIcon from '@mui/icons-material/RailwayAlert';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import DirectionsIcon from '@mui/icons-material/Directions';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
 import StationsForm from "../stations/StationsForm";
 import RailsForm from "../rails/RailsForm";
 import IncidentsForm from "../incident/IncidentsForm";
 import TrainRoutes from "../train-routes/TrainRoutes";
 import TrainRoutesForm from "../train-routes/TrainRoutesForm";
+import SubstituteRoutesForm from "../substitute-routes/SubstituteRoutesForm";
+import SubstituteRoutes from "../substitute-routes/SubstituteRoutes";
+
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
@@ -127,9 +132,15 @@ export default function RootComponent({logged}) {
                         </ListItem>
                         <ListItem button component={Link} to="/train-route">
                             <ListItemIcon>
-                                <TransferWithinAStationIcon/>
+                                <DirectionsIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Train route"/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/substitute-route">
+                            <ListItemIcon>
+                                <AltRouteIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Substitute route"/>
                         </ListItem>
                         <ListItem button component={Link} to="/incidents">
                             <ListItemIcon>
@@ -160,6 +171,15 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/train-route/detail/:id">
                                 <TrainRoutesForm/>
+                            </Route>
+                            <Route exact path="/substitute-route/new">
+                                <SubstituteRoutesForm isNew={true}/>
+                            </Route>
+                            <Route exact path="/substitute-route">
+                                <SubstituteRoutes/>
+                            </Route>
+                            <Route exact path="/substitute-route/detail/:id">
+                                <SubstituteRoutesForm/>
                             </Route>
                             <Route exact path="/stations/new">
                                 <StationsForm isNew={true}/>

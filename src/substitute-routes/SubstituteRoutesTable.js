@@ -9,7 +9,7 @@ import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
-export default function StationsTable({data}) {
+export default function SubstituteRoutesTable({data}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -24,18 +24,15 @@ export default function StationsTable({data}) {
 
     return (
         <React.Fragment>
-            <Title>Stations table</Title>
-            <Button component={Link} to="/stations/new">
-                Add new station
+            <Title>Substitute route table</Title>
+            <Button component={Link} to="/substitute-route/new">
+                Add new substitute route
             </Button>
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Code</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Region</TableCell>
-                        <TableCell>Coordinate X</TableCell>
-                        <TableCell>Coordinate Y</TableCell>
+                        <TableCell>Concerned train route</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -45,12 +42,9 @@ export default function StationsTable({data}) {
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
                             <TableRow style={{height: 60}} key={row.id} component={Link}
-                                      to={`/stations/detail/${row.id}`}>
-                                <TableCell>{row.code}</TableCell>
+                                      to={`/substitute-route/detail/${row.id}`}>
                                 <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.region.name}</TableCell>
-                                <TableCell>{row.x}</TableCell>
-                                <TableCell>{row.y}</TableCell>
+                                <TableCell>{row.concernedTrainRoute.trainCode}</TableCell>
                             </TableRow>
                         ))}
                 </TableBody>

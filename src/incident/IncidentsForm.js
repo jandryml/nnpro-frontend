@@ -137,7 +137,7 @@ function IncidentsForm({isNew, match, history}) {
                         }}
                     >
                         {rails &&
-                        rails.size !== 0 &&
+                        rails.length !== 0 &&
                         rails.map((rail) => (
                             <MenuItem key={rail.id} value={rail.id}>{rail.name}</MenuItem>
                         ))}

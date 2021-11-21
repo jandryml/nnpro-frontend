@@ -67,7 +67,7 @@ export default function IncidentsTable({data}) {
                 </TableHead>
                 <TableBody>
                     {data &&
-                    data.size !== 0 &&
+                    data.length !== 0 &&
                     data
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
@@ -87,7 +87,7 @@ export default function IncidentsTable({data}) {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={data.length}
+                count={data ? data.length : 0}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
