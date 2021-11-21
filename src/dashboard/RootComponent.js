@@ -33,6 +33,8 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import StationsForm from "../stations/StationsForm";
 import RailsForm from "../rails/RailsForm";
 import IncidentsForm from "../incident/IncidentsForm";
+import TrainRoutes from "../train-routes/TrainRoutes";
+import TrainRoutesForm from "../train-routes/TrainRoutesForm";
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
@@ -123,6 +125,12 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Rails"/>
                         </ListItem>
+                        <ListItem button component={Link} to="/train-route">
+                            <ListItemIcon>
+                                <TransferWithinAStationIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Train route"/>
+                        </ListItem>
                         <ListItem button component={Link} to="/incidents">
                             <ListItemIcon>
                                 <RailwayAlertIcon/>
@@ -143,6 +151,15 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/stations/detail/:id">
                                 <StationsForm/>
+                            </Route>
+                            <Route exact path="/train-route/new">
+                                <TrainRoutesForm isNew={true}/>
+                            </Route>
+                            <Route exact path="/train-route">
+                                <TrainRoutes/>
+                            </Route>
+                            <Route exact path="/train-route/detail/:id">
+                                <TrainRoutesForm/>
                             </Route>
                             <Route exact path="/stations/new">
                                 <StationsForm isNew={true}/>
