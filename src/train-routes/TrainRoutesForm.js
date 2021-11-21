@@ -7,6 +7,8 @@ import {withRouter} from "react-router-dom";
 
 import {deleteTrainRouteById, getTrainRouteById, saveTrainRoute} from "../data-service/TrainRouteDataService";
 import {ToastInfo} from "../components/ToastError";
+import {SectionList} from "../components/SectionList";
+import {getAllStations} from "../data-service/StationDataService";
 
 makeStyles((theme) => ({
     container: {
@@ -28,6 +30,8 @@ function TrainRoutesForm({isNew, match, history}) {
         closure: true
     });
 
+    const [trainRouteSection, setTrainRouteSection] = useState([]);
+
     useEffect(() => {
         !isNew && getTrainRouteById(match.params.id).then((data) => {
             setTrainRoutes(data);
@@ -35,7 +39,7 @@ function TrainRoutesForm({isNew, match, history}) {
     }, [match.params.id]);
 
     const handleSubmit = () => {
-        saveTrainRoute(trainRoutes).then((res) => {
+        saveTrainRoute({...trainRoutes, sections: trainRouteSection}).then((res) => {
             if (res) {
                 history.push("/train-route");
                 ToastInfo("Train route successfully created");
@@ -89,6 +93,7 @@ function TrainRoutesForm({isNew, match, history}) {
                     </FormControl>
                 </div>
             </div>
+            <SectionList stationsStop={trainRouteSection} setStationsStop={setTrainRouteSection} />
             <div className="container-flex">
                 <Button
                     type="submit"
