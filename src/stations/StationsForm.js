@@ -160,7 +160,7 @@ function StationsForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
-            { !isNew && <MapComponent center={{lat: station.x, lng: station.y}} markers={[{lat: station.x, lng: station.y}]}/>}
+            { !isNew && <MapComponent center={{lat: station.x, lng: station.y}} markers={[{id: 1,lat: station.x, lng: station.y}]}/>}
         </div>
     );
 }

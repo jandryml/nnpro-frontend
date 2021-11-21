@@ -183,11 +183,11 @@ function RailsForm({isNew, match, history}) {
             </div>
             {!isNew && <MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
                                      markers={[
-                                         {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                                         {lat: rail.targetStation.x, lng: rail.targetStation.y}]}
+                                         {id: 1, lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                                         {id: 2, lat: rail.targetStation.x, lng: rail.targetStation.y}]}
                                      trainPath={[
-                                         {lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                                         {lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
+                                         {id: 1, lat: rail.sourceStation.x, lng: rail.sourceStation.y},
+                                         {id: 2, lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
         </div>
     );
 }
