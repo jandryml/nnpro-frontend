@@ -41,14 +41,7 @@ const getTrainRouteById = async (id) => {
 };
 
 const saveTrainRoute = async (trainRoute) => {
-    return axios(optionsPost(trainRoute, "/api/train-route"))
-        .then((res) => {
-            return res.data;
-        })
-        .catch((error) => {
-            console.error(error);
-            ToastError("Train route save fail");
-        });
+    return axios(optionsPost(trainRoute, "/api/train-route"));
 };
 
 export {

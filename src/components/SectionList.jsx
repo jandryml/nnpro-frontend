@@ -2,14 +2,14 @@ import React, {useEffect, useState} from 'react'
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getAllStations} from "../data-service/StationDataService";
 
-export const SectionList = ({stationsStop, setStationsStop}) => {
+export const SectionList = ({routeNode, setRouteNode}) => {
 
     const [stations, setStations] = useState([]);
 
     const handleRemoveClick = index => {
-        const list = [...stationsStop];
+        const list = [...routeNode];
         list.splice(index, 1);
-        setStationsStop(list);
+        setRouteNode(list);
     };
 
     useEffect(() => {
@@ -19,28 +19,26 @@ export const SectionList = ({stationsStop, setStationsStop}) => {
     }, [])
 
     const handleAddClick = () => {
-        setStationsStop([...stationsStop, {id: -1}]);
+        setRouteNode([...routeNode, {stationId: -1}]);
     };
 
     return (
-        <div className="App">
+        <div className="App" style={{"margin" :"60px 43%"}}>
             <h3>Train station stops</h3>
-            {stationsStop.map((x, i) => {
+            {routeNode.map((x, i) => {
                 return (
-                    <div key={i} className="box">
+                    <div key={i} className="box" style={{"margin-top" :"10px"}}>
                         <FormControl fullWidth>
                             <InputLabel id={`station${i}`}>Station {i}</InputLabel>
                             <Select
                                 labelId={`station${i}`}
                                 id={`station${i}`}
-                                value={stationsStop[i] ? stationsStop[i].id : -1}
+                                value={routeNode[i] ? routeNode[i].stationId : -1}
                                 label={`station${i}`}
                                 onChange={(event) => {
-                                    console.log(i);
-                                    let kek = [...stationsStop]
-                                    kek[i] = {id: event.target.value}
-                                    setStationsStop(kek)
-                                    console.log(event.target.value)
+                                    let kek = [...routeNode]
+                                    kek[i] = {stationId: event.target.value}
+                                    setRouteNode(kek)
                                 }}
                             >
                                 {stations &&
@@ -51,18 +49,18 @@ export const SectionList = ({stationsStop, setStationsStop}) => {
                                     ))}
                             </Select>
                         </FormControl>
-                        <div className="btn-box">
-                            {stationsStop.length !== 0 && <button
+                        <div className="btn-box" style={{"margin-top" :"10px"}}>
+                            {routeNode.length !== 0 && <button
                                 className="mr10"
                                 onClick={() => handleRemoveClick(i)}>Remove</button>}
                         </div>
                     </div>
                 );
             })}
-            <div className="btn-box">
+            <div className="btn-box" style={{"margin-top" :"10px"}}>
                 {<button onClick={handleAddClick}>Add</button>}
             </div>
-            <div style={{marginTop: 20}}>{JSON.stringify(stationsStop)}</div>
+            {/*<div style={{marginTop: 20}}>{JSON.stringify(routeNode)}</div>*/}
         </div>
     );
 }

@@ -6,7 +6,7 @@ import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {withRouter} from "react-router-dom";
 
 import {deleteTrainRouteById, getTrainRouteById, saveTrainRoute} from "../data-service/TrainRouteDataService";
-import {ToastInfo} from "../components/ToastError";
+import {ToastError, ToastInfo} from "../components/ToastError";
 import {SectionList} from "../components/SectionList";
 import {getAllStations} from "../data-service/StationDataService";
 
@@ -27,7 +27,9 @@ function TrainRoutesForm({isNew, match, history}) {
     const [trainRoutes, setTrainRoutes] = useState({
         id: -1,
         trainCode: "",
-        closure: true
+        closure: true,
+        capacity: 0,
+        sections: []
     });
 
     const [trainRouteSection, setTrainRouteSection] = useState([]);
@@ -35,6 +37,8 @@ function TrainRoutesForm({isNew, match, history}) {
     useEffect(() => {
         !isNew && getTrainRouteById(match.params.id).then((data) => {
             setTrainRoutes(data);
+            setTrainRouteSection(data.sections)
+            console.log(data);
         });
     }, [match.params.id]);
 
@@ -44,6 +48,9 @@ function TrainRoutesForm({isNew, match, history}) {
                 history.push("/train-route");
                 ToastInfo("Train route successfully created");
             }
+        }).catch((error) => {
+            console.log(error.response.data.message);
+            ToastError(error.response.data.message);
         });
     };
 
@@ -76,6 +83,17 @@ function TrainRoutesForm({isNew, match, history}) {
                     type="textField"
                     onChange={handleChange}
                 />
+                <TextField
+                    required
+                    id="capacity"
+                    margin="normal"
+                    label="Capacity"
+                    name="capacity"
+                    fullWidth={true}
+                    value={trainRoutes && trainRoutes.capacity ? trainRoutes.capacity : ''}
+                    type="textField"
+                    onChange={handleChange}
+                />
                 <div className="container-flex">
                     <FormControl fullWidth>
                         <InputLabel id="closureLabel">Closure</InputLabel>
@@ -93,7 +111,7 @@ function TrainRoutesForm({isNew, match, history}) {
                     </FormControl>
                 </div>
             </div>
-            <SectionList stationsStop={trainRouteSection} setStationsStop={setTrainRouteSection} />
+            <SectionList routeNode={trainRouteSection} setRouteNode={setTrainRouteSection}/>
             <div className="container-flex">
                 <Button
                     type="submit"
