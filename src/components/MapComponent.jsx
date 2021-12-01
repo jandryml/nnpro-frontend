@@ -15,7 +15,7 @@ export const MapComponent = ({center, markers, trainPath, separatePaths, zoom = 
         </PathLayer>
         <MarkerLayer>
             {markers.map((marker) => (
-                <Marker coords={marker}/>
+                <Marker key={marker.id} coords={marker}/>
                 )
             )}
         </MarkerLayer>
