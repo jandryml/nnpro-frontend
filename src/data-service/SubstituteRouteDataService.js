@@ -41,14 +41,7 @@ const getSubstituteRouteById = async (id) => {
 };
 
 const saveSubstituteRoute = async (substituteRoute) => {
-    return axios(optionsPost(substituteRoute, "/api/substitute-route"))
-        .then((res) => {
-            return res.data;
-        })
-        .catch((error) => {
-            console.error(error);
-            ToastError("Substitute route save fail");
-        });
+    return axios(optionsPost(substituteRoute, "/api/substitute-route"));
 };
 
 export {

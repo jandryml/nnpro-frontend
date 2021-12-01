@@ -10,8 +10,9 @@ import {
     getSubstituteRouteById,
     saveSubstituteRoute
 } from "../data-service/SubstituteRouteDataService";
-import {ToastInfo} from "../components/ToastError";
+import {ToastError, ToastInfo} from "../components/ToastError";
 import {getAllTrainRoutes} from "../data-service/TrainRouteDataService";
+import {SectionList} from "../components/SectionList";
 
 makeStyles((theme) => ({
     container: {
@@ -28,13 +29,17 @@ makeStyles((theme) => ({
 function SubstituteRoutesForm({isNew, match, history}) {
 
     const [trainRoutes, setRoutes] = useState([]);
+
     const [substituteRoutes, setSubstituteRoutes] = useState({
         id: -1,
         name: "",
-        concernedTrainRoute: {
-            id: 1
-        }
+        trainRouteId: -1,
+        validated: false,
+        minimalCapacity: 0,
+        sections: []
     });
+
+    const [substituteRouteSection, setSubstituteRouteSection] = useState([]);
 
     useEffect(() => {
         getAllTrainRoutes().then((data) => {
@@ -43,15 +48,19 @@ function SubstituteRoutesForm({isNew, match, history}) {
 
         !isNew && getSubstituteRouteById(match.params.id).then((data) => {
             setSubstituteRoutes(data);
+            setSubstituteRouteSection(data.sections)
         });
     }, [match.params.id]);
 
     const handleSubmit = () => {
-        saveSubstituteRoute(substituteRoutes).then((res) => {
+        saveSubstituteRoute({...substituteRoutes, sections: substituteRouteSection}).then((res) => {
             if (res) {
                 history.push("/substitute-route");
                 ToastInfo("Substitute route successfully created");
             }
+        }).catch((error) => {
+            console.log(error.response.data.message);
+            ToastError(error.response.data.message);
         });
     };
 
@@ -72,41 +81,65 @@ function SubstituteRoutesForm({isNew, match, history}) {
     return (
         <div className="container">
             <h1>Substitute route detail</h1>
-            <div>
-                <TextField
-                    required
-                    id="substituteName"
-                    margin="normal"
-                    label="Substitute name"
-                    name="name"
-                    fullWidth={true}
-                    value={substituteRoutes && substituteRoutes.name ? substituteRoutes.name : ''}
-                    type="textField"
-                    onChange={handleChange}
-                />
-                <div className="container-flex">
-                    <FormControl fullWidth>
-                        <InputLabel id="sourceStationLabel">Source station</InputLabel>
-                        <Select
-                            labelId="sourceStation"
-                            id="sourceStation"
-                            value={substituteRoutes.concernedTrainRoute.id}
-                            label="Source station"
-                            onChange={(event) => {
-                                setSubstituteRoutes({...substituteRoutes, concernedTrainRoute: {id: event.target.value}});
-                            }}
-                        >
-                            {trainRoutes &&
-                            trainRoutes.length !== 0 &&
-                            trainRoutes
-                                .map((trainRoute) => (
-                                    <MenuItem key={trainRoute.id}
-                                              value={trainRoute.id}>{trainRoute.trainCode}</MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
-                </div>
+            <TextField
+                required
+                id="substituteName"
+                margin="normal"
+                label="Substitute name"
+                name="name"
+                fullWidth={true}
+                value={substituteRoutes && substituteRoutes.name ? substituteRoutes.name : ''}
+                type="textField"
+                onChange={handleChange}
+            />
+            <div className="container-flex">
+                <FormControl fullWidth>
+                    <InputLabel id="sourceStationLabel">Source station</InputLabel>
+                    <Select
+                        disabled
+                        labelId="sourceStation"
+                        id="sourceStation"
+                        value={substituteRoutes.trainRouteId}
+                        label="Source station"
+                        onChange={(event) => {
+                            setSubstituteRoutes({...substituteRoutes, trainRouteId: event.target.value});
+                        }}
+                    >
+                        {trainRoutes &&
+                        trainRoutes.length !== 0 &&
+                        trainRoutes
+                            .map((trainRoute) => (
+                                <MenuItem key={trainRoute.id}
+                                          value={trainRoute.id}>{trainRoute.trainCode}</MenuItem>
+                            ))}
+                    </Select>
+                </FormControl>
             </div>
+            <TextField
+                disabled
+                id="validated"
+                margin="normal"
+                label="Validated"
+                name="validated"
+                fullWidth={true}
+                value={substituteRoutes && substituteRoutes.validated ? 'True' : 'False'}
+                type="textField"
+                onChange={handleChange}
+            />
+            <TextField
+                disabled
+                id="minimalCapacity"
+                margin="normal"
+                label="Needed capacity"
+                name="minimalCapacity"
+                fullWidth={true}
+                value={substituteRoutes && substituteRoutes.minimalCapacity ? substituteRoutes.minimalCapacity : 0}
+                type="textField"
+                onChange={handleChange}
+            />
+
+            {<SectionList routeNode={substituteRouteSection} setRouteNode={setSubstituteRouteSection}/>}
+
             <div className="container-flex">
                 <Button
                     type="submit"

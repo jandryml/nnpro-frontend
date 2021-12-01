@@ -38,7 +38,6 @@ function TrainRoutesForm({isNew, match, history}) {
         !isNew && getTrainRouteById(match.params.id).then((data) => {
             setTrainRoutes(data);
             setTrainRouteSection(data.sections)
-            console.log(data);
         });
     }, [match.params.id]);
 
@@ -49,7 +48,6 @@ function TrainRoutesForm({isNew, match, history}) {
                 ToastInfo("Train route successfully created");
             }
         }).catch((error) => {
-            console.log(error.response.data.message);
             ToastError(error.response.data.message);
         });
     };
