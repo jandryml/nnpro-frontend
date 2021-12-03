@@ -8,6 +8,7 @@ import {deleteVehicleById, getVehicleById, saveVehicle} from "../data-service/Ve
 import {ToastInfo} from "../components/ToastError";
 import {getAllTransportCompanies} from "../data-service/TransportCompanyDataService";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {DropzoneArea} from "material-ui-dropzone";
 
 makeStyles((theme) => ({
     container: {
@@ -22,14 +23,14 @@ makeStyles((theme) => ({
 }));
 
 function VehiclesForm({isNew, match, history}) {
-
     const [transportCompany, setTransportCompany] = useState([]);
     const [vehicles, setVehicles] = useState({
         id: -1,
         name: "",
         capacity: "",
         parameters: "",
-        companyId: -1
+        companyId: -1,
+        image: ""
     });
 
     useEffect(() => {
@@ -64,8 +65,35 @@ function VehiclesForm({isNew, match, history}) {
         setVehicles({...vehicles, [name]: value})
     }
 
+    const handleChangeImage = (files) => {
+        console.log(files)
+        setVehicles({...vehicles, image: files})
+    }
+
+    const onDropHandler = (files) => {
+        if (files && files.length !== 0) {
+            let file = files[0]
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setVehicles({...vehicles, image: event.target.result})
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
     return (
         <div className="container">
+
+            <div className="imagevehicle">
+                {vehicles.image && vehicles.image.length !== 0 &&
+                <img src={vehicles.image} height="250px" alt='nevim'/>
+                }
+                <DropzoneArea
+                    multiple={false}
+                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                    onChange={onDropHandler}
+                />
+            </div>
             <h1>Vehicles detail</h1>
             <div>
                 <TextField
