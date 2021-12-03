@@ -9,6 +9,7 @@ import {ToastInfo} from "../components/ToastError";
 import {getAllTransportCompanies} from "../data-service/TransportCompanyDataService";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {DropzoneArea} from "material-ui-dropzone";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 makeStyles((theme) => ({
     container: {
