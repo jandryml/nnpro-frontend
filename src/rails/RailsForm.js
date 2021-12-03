@@ -185,9 +185,9 @@ function RailsForm({isNew, match, history}) {
                                      markers={[
                                          {id: 1, lat: rail.sourceStation.x, lng: rail.sourceStation.y},
                                          {id: 2, lat: rail.targetStation.x, lng: rail.targetStation.y}]}
-                                     trainPath={[
+                                     separatePaths={[[
                                          {id: 1, lat: rail.sourceStation.x, lng: rail.sourceStation.y},
-                                         {id: 2, lat: rail.targetStation.x, lng: rail.targetStation.y}]}/>}
+                                         {id: 2, lat: rail.targetStation.x, lng: rail.targetStation.y}]]}/>}
         </div>
     );
 }

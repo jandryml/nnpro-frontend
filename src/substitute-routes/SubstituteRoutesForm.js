@@ -13,6 +13,8 @@ import {
 import {ToastError, ToastInfo} from "../components/ToastError";
 import {getAllTrainRoutes} from "../data-service/TrainRouteDataService";
 import {SectionList} from "../components/SectionList";
+import {MapComponent} from "../components/MapComponent";
+import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
 
 makeStyles((theme) => ({
     container: {
@@ -167,6 +169,9 @@ function SubstituteRoutesForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
+            {!isNew && <MapComponent markers={getMarkers(substituteRoutes.sections)}
+                                     separatePaths={getRoutesBetween(substituteRoutes.sections)} dynamic/>}
+
         </div>
     );
 }

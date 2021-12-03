@@ -9,6 +9,8 @@ import {deleteTrainRouteById, getTrainRouteById, saveTrainRoute} from "../data-s
 import {ToastError, ToastInfo} from "../components/ToastError";
 import {SectionList} from "../components/SectionList";
 import {getAllStations} from "../data-service/StationDataService";
+import {MapComponent} from "../components/MapComponent";
+import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
 
 makeStyles((theme) => ({
     container: {
@@ -137,6 +139,7 @@ function TrainRoutesForm({isNew, match, history}) {
                     Delete
                 </Button>}
             </div>
+            { !isNew &&  <MapComponent markers={getMarkers(trainRoutes.sections)} separatePaths={getRoutesBetween(trainRoutes.sections)}/>}
         </div>
     );
 }
