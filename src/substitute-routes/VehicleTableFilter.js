@@ -7,10 +7,10 @@ import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import {getAllTransportCompanies} from "../data-service/TransportCompanyDataService";
 
-export default function VehiclesTable({data}) {
+export default function VehicleTableFilter({data, requiredCapacity}) {
+
     const [page, setPage] = React.useState(0);
     const [transportCompany, setTransportCompany] = useState([]);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -32,6 +32,14 @@ export default function VehiclesTable({data}) {
         setPage(0);
     };
 
+    const getSelectedCapacity = () => {
+        let capacity = 0
+        data.forEach((items)=>{
+            capacity += items.capacity
+        })
+        return capacity
+    }
+
     const getTransportCompanyName = (value) => {
         if (value && transportCompany && transportCompany.length !== 0) {
             return transportCompany.filter((cmp) => cmp.id === value)[0].name
@@ -42,16 +50,13 @@ export default function VehiclesTable({data}) {
 
     return (
         <React.Fragment>
-            <Title>Vehicle table</Title>
-            <Button component={Link} to="/vehicle/new">
-                Add new vehicle
-            </Button>
+            <br/><br/>
+            <Title>Selected vehicles: capacity: {getSelectedCapacity()} / {requiredCapacity}</Title>
             <Table size="small">
                 <TableHead>
                     <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Capacity</TableCell>
-                        <TableCell>Parameters</TableCell>
                         <TableCell>Transport company</TableCell>
                     </TableRow>
                 </TableHead>
@@ -65,9 +70,9 @@ export default function VehiclesTable({data}) {
                                           to={`/vehicle/detail/${row.id}`}>
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.capacity}</TableCell>
-                                    <TableCell>{row.parameters}</TableCell>
                                     <TableCell>{getTransportCompanyName(row.companyId)}</TableCell>
                                 </TableRow>
+
                             ))}
                 </TableBody>
             </Table>

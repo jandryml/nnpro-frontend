@@ -135,7 +135,7 @@ function VehiclesForm({isNew, match, history}) {
                     <Select
                         labelId="transportCompany"
                         value={vehicles && vehicles.companyId}
-                        label="Region"
+                        label="Transport company"
                         onChange={(event) => {
                             setVehicles({...vehicles, companyId: event.target.value});
                         }}

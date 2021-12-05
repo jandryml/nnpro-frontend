@@ -41,7 +41,7 @@ function TrainRoutesForm({isNew, match, history}) {
             setTrainRoutes(data);
             setTrainRouteSection(data.sections)
         });
-    }, [match.params.id]);
+    }, []);
 
     const handleSubmit = () => {
         saveTrainRoute({...trainRoutes, sections: trainRouteSection}).then((res) => {

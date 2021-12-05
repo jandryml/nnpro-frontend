@@ -23,9 +23,6 @@ export default function ChauffeursTable({data, vehicles}) {
     };
 
     const getVehicleName = (value) => {
-        console.log(value)
-        console.log("VEHICLES")
-        console.log(vehicles)
         if (value && vehicles && vehicles.length !== 0) {
             return vehicles.filter((cmp) => cmp.id === value)[0].name
         } else {

@@ -147,27 +147,6 @@ function ChauffeursForm({isNew, match, history}) {
                             ))}
                     </Select>
                 </FormControl>
-                {/*<FormControl*/}
-                {/*    fullWidth={true}>*/}
-                {/*    <InputLabel id="mutiple-select-label">Multiple Select</InputLabel>*/}
-                {/*    <Select*/}
-                {/*        labelId="mutiple-select-label"*/}
-                {/*        multiple*/}
-                {/*        value={selected}*/}
-                {/*        onChange={handleSetChange}*/}
-                {/*        renderValue={(selected) => selected.join(", ")}*/}
-                {/*        MenuProps={MenuProps}*/}
-                {/*    >*/}
-                {/*        {vehicles.map((option) => (*/}
-                {/*            <MenuItem key={option.id} value={option.name}>*/}
-                {/*                <ListItemIcon>*/}
-                {/*                    <Checkbox checked={selected.indexOf(option.name) > -1}/>*/}
-                {/*                </ListItemIcon>*/}
-                {/*                <ListItemText primary={option.name}/>*/}
-                {/*            </MenuItem>*/}
-                {/*        ))}*/}
-                {/*    </Select>*/}
-                {/*</FormControl>*/}
             </div>
             <div className="container-flex">
                 <Button

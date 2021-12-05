@@ -1,24 +1,18 @@
-import React, {useEffect, useState} from 'react'
-import {
-    FormControl,
-    InputLabel,
-    ListItem,
-    ListItemSecondaryAction,
-    ListItemText,
-    MenuItem,
-    RootRef,
-    Select
-} from "@material-ui/core";
+import React, {useLayoutEffect, useState} from 'react'
+import {ListItem, ListItemSecondaryAction, ListItemText, RootRef} from "@material-ui/core";
 import {getAllStations} from "../data-service/StationDataService";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import List from "@material-ui/core/List";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {StationsFiltered} from "./StationsFiltered";
 import Button from "@material-ui/core/Button";
 
 export const SectionList = ({routeNode, setRouteNode}) => {
 
     const [stations, setStations] = useState([]);
+    const [filteredStation, setFilteredStation] = useState([])
+    const [selectedStation, setSelectedStation] = useState([])
 
     const handleRemoveClick = index => {
         const list = [...routeNode];
@@ -36,20 +30,13 @@ export const SectionList = ({routeNode, setRouteNode}) => {
     };
 
     const getItemStyle = (isDragging, draggableStyle) => ({
-        // styles we need to apply on draggables
         ...draggableStyle,
-
         ...(isDragging && {
             background: "rgb(235,235,235)"
         })
     });
 
-    const getListStyle = isDraggingOver => ({
-        //background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    });
-
     const onDragEnd = (result) => {
-        // dropped outside the list
         if (!result.destination) {
             return;
         }
@@ -61,27 +48,33 @@ export const SectionList = ({routeNode, setRouteNode}) => {
         )
     }
 
-    const isAlreadyChosen = (station) => {
-        console.log(station.name)
-        console.log("Kolín")
-        return routeNode.filter((routeNode)=> station.name === "Kolín")
+    const getFilteredStations = (data, round) => {
+        return data.filter((station) => isAlreadyChosen(round, station))
     }
 
-    useEffect(() => {
+    const isAlreadyChosen = (round, station) => {
+        return round.filter((element) => station.id === element.stationId).length === 0
+    }
+
+    useLayoutEffect(() => {
         getAllStations().then((data) => {
             setStations(data)
+            setFilteredStation(getFilteredStations(data, routeNode))
         })
-    }, [routeNode])
+    }, [])
 
     const handleAddClick = () => {
-        setRouteNode([...routeNode, {stationId: -1}]);
+        const list = [...routeNode];
+        list.push({stationId: selectedStation})
+        list.map((element, index) => element.order = index)
+        setRouteNode(list);
     };
 
     const getStation = (stationId) => {
         if (stationId && stations && stations.length !== 0) {
             return stations.filter((cmp) => cmp.id === stationId)[0]?.name
         } else {
-            return ""
+            return null
         }
     }
 
@@ -90,9 +83,9 @@ export const SectionList = ({routeNode, setRouteNode}) => {
             <h3>Train station stops</h3>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
-                    {(provided, snapshot) => (
+                    {(provided) => (
                         <RootRef rootRef={provided.innerRef}>
-                            <List style={getListStyle(snapshot.isDraggingOver)}>
+                            <List>
                                 {routeNode.map((item, index) => (
                                     <Draggable key={getStation(item.stationId)} draggableId={getStation(item.stationId)}
                                                index={index}>
@@ -107,10 +100,12 @@ export const SectionList = ({routeNode, setRouteNode}) => {
                                                     provided.draggableProps.style
                                                 )}
                                             >
-                                                <ListItemText
-                                                    primary={getStation(item.stationId)}
-                                                    secondary={"order: " + item.order}
-                                                />
+                                                {getStation(item.stationId) &&
+                                                    <ListItemText
+                                                        primary={getStation(item.stationId)}
+                                                        secondary={"order: " + item.order}
+                                                    />
+                                                }
                                                 <ListItemSecondaryAction>
                                                     <IconButton onClick={() => handleRemoveClick(item.order)}>
                                                         <DeleteForeverIcon/>
@@ -126,42 +121,14 @@ export const SectionList = ({routeNode, setRouteNode}) => {
                     )}
                 </Droppable>
             </DragDropContext>
-            {routeNode.map((x, i) => {
-                return (
-                    <div key={i} className="box" style={{"margin-top": "10px"}}>
-                        <FormControl fullWidth>
-                            <InputLabel id={`station${i}`}>Station {i}</InputLabel>
-                            <Select
-                                labelId={`station${i}`}
-                                id={`station${i}`}
-                                value={routeNode[i] ? routeNode[i].stationId : -1}
-                                label={`station${i}`}
-                                onChange={(event) => {
-                                    let kek = [...routeNode]
-                                    kek[i] = {stationId: event.target.value}
-                                    kek.map((element, index) => element.order = index)
-                                    setRouteNode(kek)
-                                }}
-                            >
-                                {stations &&
-                                stations.size !== 0 &&
-                                stations
-                                    .filter((station) => isAlreadyChosen(station))
-                                    .map((station) => (
-                                        <MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                        <div className="btn-box" style={{"margin-top": "10px"}}>
-                            {routeNode.length !== 0 && <button
-                                className="mr10"
-                                onClick={() => handleRemoveClick(i)}>Remove</button>}
-                        </div>
-                    </div>
-                );
-            })}
+            {routeNode && routeNode.length !== 0 &&
+                <div className="container-flex">
+                    <StationsFiltered stations={filteredStation} selectedStation={selectedStation}
+                                      setSelectedStation={setSelectedStation}/>
+                </div>
+            }
             <div className="btn-box">
-                {<Button
+                <Button
                     type="submit"
                     variant="contained"
                     color="primary"
@@ -169,9 +136,8 @@ export const SectionList = ({routeNode, setRouteNode}) => {
                     onClick={handleAddClick}
                 >
                     Add
-                </Button>}
+                </Button>
             </div>
-            {/*<div style={{marginTop: 20}}>{JSON.stringify(routeNode)}</div>*/}
         </div>
     );
 }

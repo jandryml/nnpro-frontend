@@ -11,13 +11,9 @@ import {getAllTransportCompanies} from "../data-service/TransportCompanyDataServ
 export default function Vehicles() {
     const classes = useStyles();
     clsx(classes.paper, classes.fixedHeight);
-    const [transportCompany, setTransportCompany] = useState([]);
     const [vehicles, setVehicles] = useState([]);
 
     useEffect(() => {
-        getAllTransportCompanies().then((data) => {
-            setTransportCompany(data)
-        });
         getAllVehicles().then((data) => {
             setVehicles(data);
         });
@@ -30,7 +26,6 @@ export default function Vehicles() {
                     <Paper className={classes.paper}>
                         <VehiclesTable
                             data={vehicles}
-                            transportCompany={transportCompany}
                         />
                     </Paper>
                 </Grid>
