@@ -32,6 +32,7 @@ import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import StationsForm from "../stations/StationsForm";
 import RailsForm from "../rails/RailsForm";
 import IncidentsForm from "../incident/IncidentsForm";
@@ -39,6 +40,7 @@ import TrainRoutes from "../train-routes/TrainRoutes";
 import TrainRoutesForm from "../train-routes/TrainRoutesForm";
 import SubstituteRoutesForm from "../substitute-routes/SubstituteRoutesForm";
 import SubstituteRoutes from "../substitute-routes/SubstituteRoutes";
+import Report from "../report/Report";
 
 
 export default function RootComponent({logged}) {
@@ -148,6 +150,12 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Incidents"/>
                         </ListItem>
+                        <ListItem button component={Link} to="/reports">
+                            <ListItemIcon>
+                                <AssessmentIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Reports"/>
+                        </ListItem>
                     </List>
                 </Drawer>
                 <main className={classes.content}>
@@ -204,6 +212,9 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/profile">
                                 <Profile/>
+                            </Route>
+                            <Route exact path="/reports">
+                                <Report/>
                             </Route>
                         </Switch>
                         <Box pt={4}>
