@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 
 export const StationsFiltered = ({stations, selectedStation, setSelectedStation}) => {

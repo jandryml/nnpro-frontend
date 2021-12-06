@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
 import {ListItem, ListItemSecondaryAction, ListItemText, RootRef} from "@material-ui/core";
 import {getAllStations} from "../data-service/StationDataService";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
@@ -61,12 +61,13 @@ export const SectionList = ({routeNode, setRouteNode}) => {
             setStations(data)
             setFilteredStation(getFilteredStations(data, routeNode))
         })
-    }, [])
+    }, [selectedStation])
 
     const handleAddClick = () => {
         const list = [...routeNode];
         list.push({stationId: selectedStation})
         list.map((element, index) => element.order = index)
+        setSelectedStation([])
         setRouteNode(list);
     };
 
@@ -134,6 +135,7 @@ export const SectionList = ({routeNode, setRouteNode}) => {
                     color="primary"
                     fullWidth={true}
                     onClick={handleAddClick}
+                    disabled={selectedStation.length === 0}
                 >
                     Add
                 </Button>

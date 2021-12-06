@@ -51,7 +51,9 @@ export default function VehiclesTable({data}) {
                     <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Capacity</TableCell>
-                        <TableCell>Parameters</TableCell>
+                        <TableCell>Color</TableCell>
+                        <TableCell>Year</TableCell>
+                        <TableCell>Actuation</TableCell>
                         <TableCell>Transport company</TableCell>
                     </TableRow>
                 </TableHead>
@@ -65,7 +67,9 @@ export default function VehiclesTable({data}) {
                                           to={`/vehicle/detail/${row.id}`}>
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.capacity}</TableCell>
-                                    <TableCell>{row.parameters}</TableCell>
+                                    <TableCell>{row.color}</TableCell>
+                                    <TableCell>{row.year}</TableCell>
+                                    <TableCell>{row.actuation}</TableCell>
                                     <TableCell>{getTransportCompanyName(row.companyId)}</TableCell>
                                 </TableRow>
                             ))}

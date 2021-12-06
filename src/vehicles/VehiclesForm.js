@@ -29,7 +29,9 @@ function VehiclesForm({isNew, match, history}) {
         id: -1,
         name: "",
         capacity: "",
-        parameters: "",
+        color: "",
+        year: 1900,
+        actuation: "",
         companyId: -1,
         image: ""
     });
@@ -121,12 +123,34 @@ function VehiclesForm({isNew, match, history}) {
                 />
                 <TextField
                     required
-                    id="parameters"
+                    id="color"
                     margin="normal"
-                    label="Parameters"
-                    name="parameters"
+                    label="Color"
+                    name="color"
                     fullWidth={true}
-                    value={vehicles && vehicles.parameters ? vehicles.parameters : ''}
+                    value={vehicles && vehicles.color ? vehicles.color : ''}
+                    type="textField"
+                    onChange={handleChange}
+                />
+                <TextField
+                    required
+                    id="year"
+                    margin="normal"
+                    label="Year"
+                    name="year"
+                    fullWidth={true}
+                    value={vehicles && vehicles.year ? vehicles.year : 1900}
+                    type="number"
+                    onChange={handleChange}
+                />
+                <TextField
+                    required
+                    id="actuation"
+                    margin="normal"
+                    label="Actuation"
+                    name="actuation"
+                    fullWidth={true}
+                    value={vehicles && vehicles.actuation ? vehicles.actuation : ''}
                     type="textField"
                     onChange={handleChange}
                 />
