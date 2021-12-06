@@ -27,7 +27,6 @@ import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Stations from "../stations/Stations";
 import Rails from "../rails/Rails";
 import RailwayAlertIcon from '@mui/icons-material/RailwayAlert';
-import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -41,7 +40,16 @@ import TrainRoutesForm from "../train-routes/TrainRoutesForm";
 import SubstituteRoutesForm from "../substitute-routes/SubstituteRoutesForm";
 import SubstituteRoutes from "../substitute-routes/SubstituteRoutes";
 import Report from "../report/Report";
-
+import ChauffeursForm from "../chauffeurs/ChauffeursForm";
+import Chauffeurs from "../chauffeurs/Chauffeurs";
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import HouseIcon from '@mui/icons-material/House';
+import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
+import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
+import TransportCompaniesForm from "../transport-company/TransportCompaniesForm";
+import TransportCompanies from "../transport-company/TransportCompanies";
+import VehiclesForm from "../vehicles/VehiclesForm";
+import Vehicles from "../vehicles/Vehicles";
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
@@ -122,7 +130,7 @@ export default function RootComponent({logged}) {
                         </ListItem>
                         <ListItem button component={Link} to="/stations">
                             <ListItemIcon>
-                                <TransferWithinAStationIcon/>
+                                <HouseIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Stations"/>
                         </ListItem>
@@ -137,6 +145,24 @@ export default function RootComponent({logged}) {
                                 <DirectionsIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Train route"/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/transport-company">
+                            <ListItemIcon>
+                                <DepartureBoardIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Transport company"/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/vehicle">
+                            <ListItemIcon>
+                                <EmojiTransportationIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Vehicle"/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/chauffeur">
+                            <ListItemIcon>
+                                <EmojiPeopleIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Chauffeur"/>
                         </ListItem>
                         <ListItem button component={Link} to="/substitute-route">
                             <ListItemIcon>
@@ -179,6 +205,33 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/train-route/detail/:id">
                                 <TrainRoutesForm/>
+                            </Route>
+                            <Route exact path="/transport-company/new">
+                                <TransportCompaniesForm isNew={true}/>
+                            </Route>
+                            <Route exact path="/transport-company">
+                                <TransportCompanies/>
+                            </Route>
+                            <Route exact path="/transport-company/detail/:id">
+                                <TransportCompaniesForm/>
+                            </Route>
+                            <Route exact path="/chauffeur/new">
+                                <ChauffeursForm isNew={true}/>
+                            </Route>
+                            <Route exact path="/chauffeur">
+                                <Chauffeurs/>
+                            </Route>
+                            <Route exact path="/chauffeur/detail/:id">
+                                <ChauffeursForm/>
+                            </Route>
+                            <Route exact path="/vehicle/new">
+                                <VehiclesForm isNew={true}/>
+                            </Route>
+                            <Route exact path="/vehicle">
+                                <Vehicles/>
+                            </Route>
+                            <Route exact path="/vehicle/detail/:id">
+                                <VehiclesForm/>
                             </Route>
                             <Route exact path="/substitute-route/new">
                                 <SubstituteRoutesForm isNew={true}/>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
@@ -15,6 +15,10 @@ import {getAllTrainRoutes} from "../data-service/TrainRouteDataService";
 import {SectionList} from "../components/SectionList";
 import {MapComponent} from "../components/MapComponent";
 import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
+import TransportCompanyFilter from "./TransportCompanyFilter";
+import {getAllVehicles} from "../data-service/VehicleDataService";
+import VehiclesFilter from "./VehiclesFilter";
+import VehicleTableFilter from "./VehicleTableFilter";
 
 makeStyles((theme) => ({
     container: {
@@ -31,28 +35,35 @@ makeStyles((theme) => ({
 function SubstituteRoutesForm({isNew, match, history}) {
 
     const [trainRoutes, setRoutes] = useState([]);
-
+    const [substituteRouteSection, setSubstituteRouteSection] = useState([]);
+    const [filteredVehicles, setFilteredVehicles] = useState([]);
+    const [vehicles, setVehicles] = useState([]);
     const [substituteRoutes, setSubstituteRoutes] = useState({
         id: -1,
         name: "",
         trainRouteId: -1,
         validated: false,
         minimalCapacity: 0,
-        sections: []
+        sections: [],
+        vehicleIds: []
     });
 
-    const [substituteRouteSection, setSubstituteRouteSection] = useState([]);
 
     useEffect(() => {
         getAllTrainRoutes().then((data) => {
             setRoutes(data)
         });
 
+        getAllVehicles().then((vehiclesLocal) => {
+            setVehicles(vehiclesLocal)
+        });
+
         !isNew && getSubstituteRouteById(match.params.id).then((data) => {
             setSubstituteRoutes(data);
             setSubstituteRouteSection(data.sections)
+            console.log(getVehiclesByIds().map((item) => item.companyId).filter(onlyUnique))
         });
-    }, [match.params.id]);
+    }, []);
 
     const handleSubmit = () => {
         saveSubstituteRoute({...substituteRoutes, sections: substituteRouteSection}).then((res) => {
@@ -78,6 +89,32 @@ function SubstituteRoutesForm({isNew, match, history}) {
     const handleChange = event => {
         const {value, name} = event.target;
         setSubstituteRoutes({...substituteRoutes, [name]: value})
+    }
+
+    const getVehiclesByIds = () => {
+        return substituteRoutes.vehicleIds.map((item) => vehicles.filter((veh) => veh.id === item)[0])
+    }
+
+    const getFilteredVehicles = (vehiclesLocal, companyID) => {
+        return vehiclesLocal.filter((vehicle) => isVehicleInCompany(vehicle, companyID))
+    }
+
+    const isVehicleInCompany = (vehiclesLocal, companyID) => {
+        return companyID.filter((id) => vehiclesLocal.companyId === id).length !== 0
+    }
+
+    function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+
+    const updateVehicles = (selectedTransportCompanyLocal) => {
+        if (selectedTransportCompanyLocal && selectedTransportCompanyLocal.length !== 0) {
+            if (vehicles && vehicles.length !== 0) {
+                setFilteredVehicles(getFilteredVehicles(vehicles, selectedTransportCompanyLocal))
+            }
+        } else {
+            setFilteredVehicles([])
+        }
     }
 
     return (
@@ -108,12 +145,12 @@ function SubstituteRoutesForm({isNew, match, history}) {
                         }}
                     >
                         {trainRoutes &&
-                        trainRoutes.length !== 0 &&
-                        trainRoutes
-                            .map((trainRoute) => (
-                                <MenuItem key={trainRoute.id}
-                                          value={trainRoute.id}>{trainRoute.trainCode}</MenuItem>
-                            ))}
+                            trainRoutes.length !== 0 &&
+                            trainRoutes
+                                .map((trainRoute) => (
+                                    <MenuItem key={trainRoute.id}
+                                              value={trainRoute.id}>{trainRoute.trainCode}</MenuItem>
+                                ))}
                     </Select>
                 </FormControl>
             </div>
@@ -139,9 +176,19 @@ function SubstituteRoutesForm({isNew, match, history}) {
                 type="textField"
                 onChange={handleChange}
             />
-
-            {<SectionList routeNode={substituteRouteSection} setRouteNode={setSubstituteRouteSection}/>}
-
+            <SectionList routeNode={substituteRouteSection} setRouteNode={setSubstituteRouteSection}/>
+            <br/>
+            <div className="container-flex">
+            <TransportCompanyFilter updateVehicles={updateVehicles}/>
+            <br/>
+            <VehiclesFilter vehicles={filteredVehicles} substituteRoutes={substituteRoutes}
+                            setSubstituteRoutes={setSubstituteRoutes}/>
+            <br/>
+            </div>
+            <VehicleTableFilter
+                data={getVehiclesByIds()}
+                requiredCapacity={substituteRoutes.minimalCapacity}
+            />
             <div className="container-flex">
                 <Button
                     type="submit"
