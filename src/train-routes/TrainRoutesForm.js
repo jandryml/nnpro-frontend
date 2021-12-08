@@ -11,6 +11,8 @@ import {SectionList} from "../components/SectionList";
 import {getAllStations} from "../data-service/StationDataService";
 import {MapComponent} from "../components/MapComponent";
 import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -112,34 +114,39 @@ function TrainRoutesForm({isNew, match, history}) {
                 </div>
             </div>
             <SectionList routeNode={trainRouteSection} setRouteNode={setTrainRouteSection}/>
-            <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    fullWidth={true}
-                    onClick={() => history.push("/train-route")}
-                >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
-            </div>
-            { !isNew &&  <MapComponent markers={getMarkers(trainRoutes.sections)} separatePaths={getRoutesBetween(trainRoutes.sections)}/>}
+                <div className="container-flex">
+                    <PermissionsGate scopes={[SCOPES.admin]}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    </PermissionsGate>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        fullWidth={true}
+                        onClick={() => history.push("/train-route")}
+                    >Back</Button>
+                    <PermissionsGate scopes={[SCOPES.admin]}>
+                        {!isNew && <Button
+                            type="submit"
+                            variant="contained"
+                            color="default"
+                            fullWidth={true}
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </Button>}
+                    </PermissionsGate>
+                </div>
+            {!isNew && <MapComponent markers={getMarkers(trainRoutes.sections)}
+                                     separatePaths={getRoutesBetween(trainRoutes.sections)}/>}
         </div>
     );
 }

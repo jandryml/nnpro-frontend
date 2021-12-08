@@ -12,6 +12,8 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 const useStyles = makeStyles((theme) => ({
     seeMore: {
@@ -50,9 +52,11 @@ export default function IncidentsTable({data}) {
     return (
         <React.Fragment>
             <Title>Incident table</Title>
-            <Button component={Link} to="/incidents/new">
-                Add new incident
-            </Button>
+            <PermissionsGate scopes={[SCOPES.moderator]}>
+                <Button component={Link} to="/incidents/new">
+                    Add new incident
+                </Button>
+            </PermissionsGate>
             <Table size="small">
                 <TableHead>
                     <TableRow>

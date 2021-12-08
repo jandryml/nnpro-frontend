@@ -56,6 +56,8 @@ import UserForm from "../users/UserForm";
 import Users from "../users/Users";
 import {getUser} from "../data-service/UserDataService";
 import {ToastError} from "../components/ToastError";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
@@ -136,14 +138,14 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Profile"/>
                         </ListItem>
-
-                        <ListItem button component={Link} to="/users">
-                            <ListItemIcon>
-                                <GroupIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Users"/>
-                        </ListItem>
-
+                        <PermissionsGate scopes={[SCOPES.admin]}>
+                            <ListItem button component={Link} to="/users">
+                                <ListItemIcon>
+                                    <GroupIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Users"/>
+                            </ListItem>
+                        </PermissionsGate>
                         <ListItem button component={Link} to="/stations">
                             <ListItemIcon>
                                 <HouseIcon/>
@@ -162,24 +164,26 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Train route"/>
                         </ListItem>
-                        <ListItem button component={Link} to="/transport-company">
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Transport company"/>
-                        </ListItem>
-                        <ListItem button component={Link} to="/vehicle">
-                            <ListItemIcon>
-                                <EmojiTransportationIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Vehicle"/>
-                        </ListItem>
-                        <ListItem button component={Link} to="/chauffeur">
-                            <ListItemIcon>
-                                <EmojiPeopleIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Chauffeur"/>
-                        </ListItem>
+                        <PermissionsGate scopes={[SCOPES.admin]}>
+                            <ListItem button component={Link} to="/transport-company">
+                                <ListItemIcon>
+                                    <DepartureBoardIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Transport company"/>
+                            </ListItem>
+                            <ListItem button component={Link} to="/vehicle">
+                                <ListItemIcon>
+                                    <EmojiTransportationIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Vehicle"/>
+                            </ListItem>
+                            <ListItem button component={Link} to="/chauffeur">
+                                <ListItemIcon>
+                                    <EmojiPeopleIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Chauffeur"/>
+                            </ListItem>
+                        </PermissionsGate>
                         <ListItem button component={Link} to="/substitute-route">
                             <ListItemIcon>
                                 <AltRouteIcon/>
@@ -192,12 +196,14 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Incidents"/>
                         </ListItem>
-                        <ListItem button component={Link} to="/reports">
-                            <ListItemIcon>
-                                <AssessmentIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Reports"/>
-                        </ListItem>
+                        <PermissionsGate scopes={[SCOPES.admin]}>
+                            <ListItem button component={Link} to="/reports">
+                                <ListItemIcon>
+                                    <AssessmentIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Reports"/>
+                            </ListItem>
+                        </PermissionsGate>
                     </List>
                 </Drawer>
                 <main className={classes.content}>

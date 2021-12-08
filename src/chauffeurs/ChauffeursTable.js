@@ -8,6 +8,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function ChauffeursTable({data, vehicles}) {
     const [page, setPage] = React.useState(0);
@@ -32,47 +34,49 @@ export default function ChauffeursTable({data, vehicles}) {
 
     return (
         <React.Fragment>
-            <Title>Chauffeur table</Title>
-            <Button component={Link} to="/chauffeur/new">
-                Add new chauffeur
-            </Button>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Firstname</TableCell>
-                        <TableCell>Lastname</TableCell>
-                        <TableCell>Driving license</TableCell>
-                        <TableCell>Driving experience</TableCell>
-                        <TableCell>Phone number</TableCell>
-                        <TableCell>Vehicle</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data &&
-                    data.length !== 0 &&
-                    data
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row) => (
-                            <TableRow style={{height: 60}} key={row.id} component={Link}
-                                      to={`/chauffeur/detail/${row.id}`}>
-                                <TableCell>{row.firstname}</TableCell>
-                                <TableCell>{row.lastname}</TableCell>
-                                <TableCell>{row.drivingLicense}</TableCell>
-                                <TableCell>{row.drivingExperience}</TableCell>
-                                <TableCell>{row.phoneNumber}</TableCell>
-                                <TableCell>{getVehicleName(row.vehicleId)}</TableCell>
-                            </TableRow>
-                        ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={data ? data.length : 0}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}/>
+            <PermissionsGate scopes={[SCOPES.admin]} showError img>
+                <Title>Chauffeur table</Title>
+                <Button component={Link} to="/chauffeur/new">
+                    Add new chauffeur
+                </Button>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Firstname</TableCell>
+                            <TableCell>Lastname</TableCell>
+                            <TableCell>Driving license</TableCell>
+                            <TableCell>Driving experience</TableCell>
+                            <TableCell>Phone number</TableCell>
+                            <TableCell>Vehicle</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data &&
+                        data.length !== 0 &&
+                        data
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row) => (
+                                <TableRow style={{height: 60}} key={row.id} component={Link}
+                                          to={`/chauffeur/detail/${row.id}`}>
+                                    <TableCell>{row.firstname}</TableCell>
+                                    <TableCell>{row.lastname}</TableCell>
+                                    <TableCell>{row.drivingLicense}</TableCell>
+                                    <TableCell>{row.drivingExperience}</TableCell>
+                                    <TableCell>{row.phoneNumber}</TableCell>
+                                    <TableCell>{getVehicleName(row.vehicleId)}</TableCell>
+                                </TableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={data ? data.length : 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}/>
+            </PermissionsGate>
         </React.Fragment>
     );
 }

@@ -8,6 +8,8 @@ import {deleteRailById, getRailById, saveRail} from "../data-service/RailDataSer
 import {getAllStations} from "../data-service/StationDataService";
 import {ToastInfo} from "../components/ToastError";
 import {MapComponent} from "../components/MapComponent";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -155,15 +157,17 @@ function RailsForm({isNew, match, history}) {
                 </div>
             </div>
             <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        onClick={handleSubmit}
+                    >
+                        Save
+                    </Button>
+                </PermissionsGate>
                 <Button
                     type="submit"
                     variant="contained"
@@ -171,15 +175,17 @@ function RailsForm({isNew, match, history}) {
                     fullWidth={true}
                     onClick={() => history.push("/rails")}
                 >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    {!isNew && <Button
+                        type="submit"
+                        variant="contained"
+                        color="default"
+                        fullWidth={true}
+                        onClick={handleDelete}
+                    >
+                        Delete
+                    </Button>}
+                </PermissionsGate>
             </div>
             {!isNew && <MapComponent center={{lat: rail.sourceStation.x, lng: rail.sourceStation.y}}
                                      markers={[

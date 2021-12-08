@@ -7,6 +7,8 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {StationsFiltered} from "./StationsFiltered";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export const SectionList = ({routeNode, setRouteNode}) => {
 
@@ -122,24 +124,26 @@ export const SectionList = ({routeNode, setRouteNode}) => {
                     )}
                 </Droppable>
             </DragDropContext>
-            {routeNode && routeNode.length !== 0 &&
+            <PermissionsGate scopes={[SCOPES.admin]}>
+                {routeNode && routeNode.length !== 0 &&
                 <div className="container-flex">
                     <StationsFiltered stations={filteredStation} selectedStation={selectedStation}
                                       setSelectedStation={setSelectedStation}/>
                 </div>
-            }
-            <div className="btn-box">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleAddClick}
-                    disabled={selectedStation.length === 0}
-                >
-                    Add
-                </Button>
-            </div>
+                }
+                <div className="btn-box">
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        onClick={handleAddClick}
+                        disabled={selectedStation.length === 0}
+                    >
+                        Add
+                    </Button>
+                </div>
+            </PermissionsGate>
         </div>
     );
 }

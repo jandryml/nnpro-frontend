@@ -10,6 +10,8 @@ import {
     saveTransportCompany
 } from "../data-service/TransportCompanyDataService";
 import {ToastInfo} from "../components/ToastError";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -63,69 +65,71 @@ function TransportCompaniesForm({isNew, match, history}) {
 
     return (
         <div className="container">
-            <h1>Transport company detail</h1>
-            <div>
-                <TextField
-                    required
-                    id="code"
-                    margin="normal"
-                    label="Code"
-                    name="code"
-                    fullWidth={true}
-                    value={transportCompanies && transportCompanies.code ? transportCompanies.code : ''}
-                    type="textField"
-                    onChange={handleChange}
-                />
-                <TextField
-                    required
-                    id="name"
-                    margin="normal"
-                    label="Name"
-                    name="name"
-                    fullWidth={true}
-                    value={transportCompanies && transportCompanies.name ? transportCompanies.name : ''}
-                    type="textField"
-                    onChange={handleChange}
-                />
-                <TextField
-                    required
-                    id="cin"
-                    margin="normal"
-                    label="Company identification number (CIN)"
-                    name="cin"
-                    fullWidth={true}
-                    value={transportCompanies && transportCompanies.cin ? transportCompanies.cin : ''}
-                    type="textField"
-                    onChange={handleChange}
-                />
-            </div>
-            <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    fullWidth={true}
-                    onClick={() => history.push("/transport-company")}
-                >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
-            </div>
+            <PermissionsGate scopes={[SCOPES.admin]} showError img>
+                <h1>Transport company detail</h1>
+                <div>
+                    <TextField
+                        required
+                        id="code"
+                        margin="normal"
+                        label="Code"
+                        name="code"
+                        fullWidth={true}
+                        value={transportCompanies && transportCompanies.code ? transportCompanies.code : ''}
+                        type="textField"
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        required
+                        id="name"
+                        margin="normal"
+                        label="Name"
+                        name="name"
+                        fullWidth={true}
+                        value={transportCompanies && transportCompanies.name ? transportCompanies.name : ''}
+                        type="textField"
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        required
+                        id="cin"
+                        margin="normal"
+                        label="Company identification number (CIN)"
+                        name="cin"
+                        fullWidth={true}
+                        value={transportCompanies && transportCompanies.cin ? transportCompanies.cin : ''}
+                        type="textField"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="container-flex">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        fullWidth={true}
+                        onClick={() => history.push("/transport-company")}
+                    >Back</Button>
+                        {!isNew && <Button
+                            type="submit"
+                            variant="contained"
+                            color="default"
+                            fullWidth={true}
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </Button>}
+                </div>
+            </PermissionsGate>
         </div>
     );
 }

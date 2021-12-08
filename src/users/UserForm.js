@@ -7,6 +7,8 @@ import {withRouter} from "react-router-dom";
 import {editUser, getUserById} from "../data-service/UserDataService";
 import {ToastInfo} from "../components/ToastError";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 
 makeStyles((theme) => ({
@@ -47,15 +49,15 @@ function UserForm({isNew, match, history}) {
         });
     };
 
- /*   const handleDelete = () => {
-        deleteUser(users.id).then((res) => {
-            if (res) {
-                history.push("/vehicle");
-                ToastInfo("Vehicle successfully removed");
-            }
-        });
-    };
-*/
+    /*   const handleDelete = () => {
+           deleteUser(users.id).then((res) => {
+               if (res) {
+                   history.push("/vehicle");
+                   ToastInfo("Vehicle successfully removed");
+               }
+           });
+       };
+   */
     const handleChange = event => {
         const {value, name} = event.target;
         setUsers({...users, [name]: value})
@@ -140,15 +142,17 @@ function UserForm({isNew, match, history}) {
                 </div>
             </div>
             <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        onClick={handleSubmit}
+                    >
+                        Save
+                    </Button>
+                </PermissionsGate>
                 <Button
                     type="submit"
                     variant="contained"

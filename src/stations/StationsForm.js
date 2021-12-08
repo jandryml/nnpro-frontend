@@ -9,6 +9,8 @@ import {deleteStationById, getStationById, saveStation} from "../data-service/St
 import {getRegions} from "../data-service/RegionDataService";
 import {ToastInfo} from "../components/ToastError";
 import {MapComponent} from "../components/MapComponent";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -133,33 +135,37 @@ function StationsForm({isNew, match, history}) {
                     onChange={handleChange}
                 />
             </div>
-            <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    fullWidth={true}
-                    onClick={() => history.push("/stations")}
-                >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
-            </div>
+                <div className="container-flex">
+                    <PermissionsGate scopes={[SCOPES.admin]}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    </PermissionsGate>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        fullWidth={true}
+                        onClick={() => history.push("/stations")}
+                    >Back</Button>
+                    <PermissionsGate scopes={[SCOPES.admin]}>
+                        {!isNew && <Button
+                            type="submit"
+                            variant="contained"
+                            color="default"
+                            fullWidth={true}
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </Button>}
+                    </PermissionsGate>
+                </div>
             { !isNew && <MapComponent center={{lat: station.x, lng: station.y}} zoom={12} markers={[{id: 1,lat: station.x, lng: station.y}]}/>}
         </div>
     );

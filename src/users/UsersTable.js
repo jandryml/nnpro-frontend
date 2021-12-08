@@ -7,6 +7,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function UsersTable({data}) {
     const [page, setPage] = React.useState(0);
@@ -23,19 +25,20 @@ export default function UsersTable({data}) {
 
     return (
         <React.Fragment>
-            <Title>Users table</Title>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Username</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Role</TableCell>
-                        <TableCell>User Group</TableCell>
-                        <TableCell>Active</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data &&
+            <PermissionsGate scopes={[SCOPES.admin]} showError img>
+                <Title>Users table</Title>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Username</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Role</TableCell>
+                            <TableCell>User Group</TableCell>
+                            <TableCell>Active</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data &&
                         data.length !== 0 &&
                         data
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -49,16 +52,17 @@ export default function UsersTable({data}) {
                                     <TableCell>{row.active ? "True" : "False"}</TableCell>
                                 </TableRow>
                             ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={data ? data.length : 0}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}/>
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={data ? data.length : 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}/>
+            </PermissionsGate>
         </React.Fragment>
     );
 }

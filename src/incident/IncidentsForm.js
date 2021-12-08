@@ -8,6 +8,8 @@ import {withRouter} from "react-router-dom";
 import {deleteIncidentById, getIncidentById, saveIncident} from "../data-service/IncidentDataService";
 import {getAllRails} from "../data-service/RailDataService";
 import {ToastInfo} from "../components/ToastError";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -171,13 +173,15 @@ function IncidentsForm({isNew, match, history}) {
                 />
             </div>
             <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >Save</Button>
+                <PermissionsGate scopes={[SCOPES.moderator]}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        onClick={handleSubmit}
+                    >Save</Button>
+                </PermissionsGate>
                 <Button
                     type="submit"
                     variant="contained"
@@ -185,13 +189,15 @@ function IncidentsForm({isNew, match, history}) {
                     fullWidth={true}
                     onClick={() => history.push("/incidents")}
                 >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >Delete</Button>}
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    {!isNew && <Button
+                        type="submit"
+                        variant="contained"
+                        color="default"
+                        fullWidth={true}
+                        onClick={handleDelete}
+                    >Delete</Button>}
+                </PermissionsGate>
             </div>
         </div>
     );
