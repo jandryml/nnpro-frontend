@@ -16,7 +16,7 @@ import {SectionList} from "../components/SectionList";
 import {MapComponent} from "../components/MapComponent";
 import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
 import TransportCompanyFilter from "./TransportCompanyFilter";
-import {getAllVehicles} from "../data-service/VehicleDataService";
+import {getAllVehicles, listAvailableByCompanyIds} from "../data-service/VehicleDataService";
 import VehiclesFilter from "./VehiclesFilter";
 import VehicleTableFilter from "./VehicleTableFilter";
 import {SCOPES} from "../permission-provider/permission-maps";
@@ -107,9 +107,13 @@ function SubstituteRoutesForm({isNew, match, history}) {
 
     const updateVehicles = (selectedTransportCompanyLocal) => {
         if (selectedTransportCompanyLocal && selectedTransportCompanyLocal.length !== 0) {
-            if (vehicles && vehicles.length !== 0) {
-                setFilteredVehicles(getFilteredVehicles(vehicles, selectedTransportCompanyLocal))
-            }
+
+            console.log('vehicles ', selectedTransportCompanyLocal)
+
+            listAvailableByCompanyIds(selectedTransportCompanyLocal).then((vehiclesLocal) => {
+                console.log("fetched ", vehiclesLocal)
+                setFilteredVehicles(vehiclesLocal)
+            });
         } else {
             setFilteredVehicles([])
         }
