@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import clsx from "clsx";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
@@ -48,12 +48,20 @@ import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import TransportCompaniesForm from "../transport-company/TransportCompaniesForm";
 import TransportCompanies from "../transport-company/TransportCompanies";
+import GroupIcon from '@mui/icons-material/Group';
 import VehiclesForm from "../vehicles/VehiclesForm";
 import Vehicles from "../vehicles/Vehicles";
+import UsersTable from "../users/UsersTable";
+import UserForm from "../users/UserForm";
+import Users from "../users/Users";
+import {getUser} from "../data-service/UserDataService";
+import {ToastError} from "../components/ToastError";
 
 export default function RootComponent({logged}) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
+
+
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -64,7 +72,7 @@ export default function RootComponent({logged}) {
 
     const onLogout = () => {
         logout();
-        logged();
+        logged(false);
     };
 
     return (
@@ -128,6 +136,14 @@ export default function RootComponent({logged}) {
                             </ListItemIcon>
                             <ListItemText primary="Profile"/>
                         </ListItem>
+
+                        <ListItem button component={Link} to="/users">
+                            <ListItemIcon>
+                                <GroupIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Users"/>
+                        </ListItem>
+
                         <ListItem button component={Link} to="/stations">
                             <ListItemIcon>
                                 <HouseIcon/>
@@ -268,6 +284,12 @@ export default function RootComponent({logged}) {
                             </Route>
                             <Route exact path="/reports">
                                 <Report/>
+                            </Route>
+                            <Route exact path="/users">
+                                <Users/>
+                            </Route>
+                            <Route exact path="/user/detail/:id">
+                                <UserForm/>
                             </Route>
                         </Switch>
                         <Box pt={4}>

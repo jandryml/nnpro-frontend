@@ -13,6 +13,27 @@ const getUser = async () => {
         });
 };
 
+const validateUser = async () => {
+    return axios(optionsGet("/api/user/details"))
+        .then((res) => {
+            return res.data;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+};
+
+const getUserById = async (id) => {
+    return axios(optionsGet(`/api/user/${id}`))
+        .then((res) => {
+            return res.data;
+        })
+        .catch((error) => {
+            console.error(error);
+            ToastError("User was not found");
+        });
+};
+
 const addUser = async (userInfo) => {
     return axios(optionsPost(userInfo, "/api/user/register"))
         .then((res) => {
@@ -37,4 +58,4 @@ const editUser = async (userInfo) => {
         });
 };
 
-export {getUser, addUser, editUser};
+export {getUser, addUser, editUser, getUserById, validateUser};

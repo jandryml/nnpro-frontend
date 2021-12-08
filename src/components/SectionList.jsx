@@ -61,7 +61,7 @@ export const SectionList = ({routeNode, setRouteNode}) => {
             setStations(data)
             setFilteredStation(getFilteredStations(data, routeNode))
         })
-    }, [selectedStation])
+    }, [selectedStation, routeNode])
 
     const handleAddClick = () => {
         const list = [...routeNode];

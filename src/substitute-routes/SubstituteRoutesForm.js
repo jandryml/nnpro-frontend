@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
@@ -61,7 +61,6 @@ function SubstituteRoutesForm({isNew, match, history}) {
         !isNew && getSubstituteRouteById(match.params.id).then((data) => {
             setSubstituteRoutes(data);
             setSubstituteRouteSection(data.sections)
-            console.log(getVehiclesByIds().map((item) => item.companyId).filter(onlyUnique))
         });
     }, []);
 
@@ -92,6 +91,7 @@ function SubstituteRoutesForm({isNew, match, history}) {
     }
 
     const getVehiclesByIds = () => {
+        console.log(substituteRoutes.vehicleIds)
         return substituteRoutes.vehicleIds.map((item) => vehicles.filter((veh) => veh.id === item)[0])
     }
 
@@ -101,10 +101,6 @@ function SubstituteRoutesForm({isNew, match, history}) {
 
     const isVehicleInCompany = (vehiclesLocal, companyID) => {
         return companyID.filter((id) => vehiclesLocal.companyId === id).length !== 0
-    }
-
-    function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
     }
 
     const updateVehicles = (selectedTransportCompanyLocal) => {
@@ -179,16 +175,19 @@ function SubstituteRoutesForm({isNew, match, history}) {
             <SectionList routeNode={substituteRouteSection} setRouteNode={setSubstituteRouteSection}/>
             <br/>
             <div className="container-flex">
-            <TransportCompanyFilter updateVehicles={updateVehicles}/>
-            <br/>
-            <VehiclesFilter vehicles={filteredVehicles} substituteRoutes={substituteRoutes}
-                            setSubstituteRoutes={setSubstituteRoutes}/>
-            <br/>
+                <TransportCompanyFilter updateVehicles={updateVehicles}/>
+                <br/>
+                <VehiclesFilter vehicles={filteredVehicles} substituteRoutes={substituteRoutes}
+                                setSubstituteRoutes={setSubstituteRoutes}/>
+                <br/>
             </div>
-            <VehicleTableFilter
-                data={getVehiclesByIds()}
-                requiredCapacity={substituteRoutes.minimalCapacity}
-            />
+            {vehicles && vehicles.length !== 0 &&
+                <VehicleTableFilter
+                    data={getVehiclesByIds()}
+                    requiredCapacity={substituteRoutes.minimalCapacity}
+                />
+            }
+
             <div className="container-flex">
                 <Button
                     type="submit"
