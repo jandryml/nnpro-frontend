@@ -8,6 +8,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function StationsTable({data}) {
     const [page, setPage] = React.useState(0);
@@ -25,9 +27,11 @@ export default function StationsTable({data}) {
     return (
         <React.Fragment>
             <Title>Stations table</Title>
-            <Button component={Link} to="/stations/new">
-                Add new station
-            </Button>
+            <PermissionsGate scopes={[SCOPES.admin]} showError={false}>
+                <Button component={Link} to="/stations/new">
+                    Add new station
+                </Button>
+            </PermissionsGate>
             <Table size="small">
                 <TableHead>
                     <TableRow>

@@ -1,5 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 class Report extends React.Component {
     downloadChauffeursReport = () => {
@@ -32,14 +34,16 @@ class Report extends React.Component {
         return (
 
             <div>
-                <div>
-                    <label>Generate driver report: </label>
-                    <Button onClick={this.downloadChauffeursReport}>Generate</Button>
-                </div>
-                <div>
-                    <label>Generate incident report: </label>
-                    <Button onClick={this.downloadIncidentsReport}>Generate</Button>
-                </div>
+                <PermissionsGate scopes={[SCOPES.admin]} showError img>
+                    <div>
+                        <label>Generate driver report: </label>
+                        <Button onClick={this.downloadChauffeursReport}>Generate</Button>
+                    </div>
+                    <div>
+                        <label>Generate incident report: </label>
+                        <Button onClick={this.downloadIncidentsReport}>Generate</Button>
+                    </div>
+                </PermissionsGate>
             </div>
         )
     };

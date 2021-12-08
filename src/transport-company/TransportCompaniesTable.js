@@ -8,6 +8,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function TransportCompaniesTable({data}) {
     const [page, setPage] = React.useState(0);
@@ -24,10 +26,11 @@ export default function TransportCompaniesTable({data}) {
 
     return (
         <React.Fragment>
+            <PermissionsGate scopes={[SCOPES.admin]} showError img>
             <Title>Transport company table</Title>
-            <Button component={Link} to="/transport-company/new">
-                Add new transport company
-            </Button>
+                <Button component={Link} to="/transport-company/new">
+                    Add new transport company
+                </Button>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -59,6 +62,7 @@ export default function TransportCompaniesTable({data}) {
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}/>
+            </PermissionsGate>
         </React.Fragment>
     );
 }

@@ -25,9 +25,6 @@ export default function SubstituteRoutesTable({data}) {
     return (
         <React.Fragment>
             <Title>Substitute route table</Title>
-            <Button component={Link} to="/substitute-route/new">
-                Add new substitute route
-            </Button>
             <Table size="small">
                 <TableHead>
                     <TableRow>

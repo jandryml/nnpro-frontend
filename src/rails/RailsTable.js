@@ -8,6 +8,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Title from "../dashboard/Title";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 export default function RailsTable({data}) {
     const [page, setPage] = React.useState(0);
@@ -25,9 +27,11 @@ export default function RailsTable({data}) {
     return (
         <React.Fragment>
             <Title>Rails table</Title>
-            <Button component={Link} to="/rails/new">
-                Add new rail
-            </Button>
+            <PermissionsGate scopes={[SCOPES.admin]}>
+                <Button component={Link} to="/rails/new">
+                    Add new rail
+                </Button>
+            </PermissionsGate>
             <Table size="small">
                 <TableHead>
                     <TableRow>

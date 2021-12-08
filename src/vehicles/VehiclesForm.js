@@ -9,7 +9,8 @@ import {ToastInfo} from "../components/ToastError";
 import {getAllTransportCompanies} from "../data-service/TransportCompanyDataService";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {DropzoneArea} from "material-ui-dropzone";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PermissionsGate from "../permission-provider/PermissionGate";
+import {SCOPES} from "../permission-provider/permission-maps";
 
 makeStyles((theme) => ({
     container: {
@@ -86,27 +87,27 @@ function VehiclesForm({isNew, match, history}) {
 
     return (
         <div className="container">
-
-            <div className="imagevehicle">
-                {vehicles.image && vehicles.image.length !== 0 &&
-                <img src={vehicles.image} height="250px" alt='nevim'/>
-                }
-                <DropzoneArea
-                    multiple={false}
-                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                    onChange={onDropHandler}
-                />
-            </div>
-            <h1>Vehicles detail</h1>
-            <div>
-                <TextField
-                    required
-                    id="name"
-                    margin="normal"
-                    label="Name"
-                    name="name"
-                    fullWidth={true}
-                    value={vehicles && vehicles.name ? vehicles.name : ''}
+            <PermissionsGate scopes={[SCOPES.admin]} showError img>
+                <div className="imagevehicle">
+                    {vehicles.image && vehicles.image.length !== 0 &&
+                    <img src={vehicles.image} height="250px" alt='nevim'/>
+                    }
+                    <DropzoneArea
+                        multiple={false}
+                        acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                        onChange={onDropHandler}
+                    />
+                </div>
+                <h1>Vehicles detail</h1>
+                <div>
+                    <TextField
+                        required
+                        id="name"
+                        margin="normal"
+                        label="Name"
+                        name="name"
+                        fullWidth={true}
+                        value={vehicles && vehicles.name ? vehicles.name : ''}
                     type="textField"
                     onChange={handleChange}
                 />
@@ -172,34 +173,40 @@ function VehiclesForm({isNew, match, history}) {
                             ))}
                     </Select>
                 </FormControl>
-            </div>
-            <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    fullWidth={true}
-                    onClick={() => history.push("/vehicle")}
-                >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
-            </div>
+                </div>
+
+                <div className="container-flex">
+                    <PermissionsGate scopes={[SCOPES.admin]} showError>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    </PermissionsGate>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        fullWidth={true}
+                        onClick={() => history.push("/vehicle")}
+                    >Back</Button>
+                    <PermissionsGate scopes={[SCOPES.admin]}>
+                        {!isNew && <Button
+                            type="submit"
+                            variant="contained"
+                            color="default"
+                            fullWidth={true}
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </Button>}
+                    </PermissionsGate>
+                </div>
+            </PermissionsGate>
         </div>
     );
 }

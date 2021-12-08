@@ -19,6 +19,8 @@ import TransportCompanyFilter from "./TransportCompanyFilter";
 import {getAllVehicles} from "../data-service/VehicleDataService";
 import VehiclesFilter from "./VehiclesFilter";
 import VehicleTableFilter from "./VehicleTableFilter";
+import {SCOPES} from "../permission-provider/permission-maps";
+import PermissionsGate from "../permission-provider/PermissionGate";
 
 makeStyles((theme) => ({
     container: {
@@ -174,30 +176,33 @@ function SubstituteRoutesForm({isNew, match, history}) {
             />
             <SectionList routeNode={substituteRouteSection} setRouteNode={setSubstituteRouteSection}/>
             <br/>
-            <div className="container-flex">
-                <TransportCompanyFilter updateVehicles={updateVehicles}/>
-                <br/>
-                <VehiclesFilter vehicles={filteredVehicles} substituteRoutes={substituteRoutes}
-                                setSubstituteRoutes={setSubstituteRoutes}/>
-                <br/>
-            </div>
-            {vehicles && vehicles.length !== 0 &&
+            <PermissionsGate scopes={[SCOPES.admin]}>
+                <div className="container-flex">
+                    <TransportCompanyFilter updateVehicles={updateVehicles}/>
+                    <br/>
+                    <VehiclesFilter vehicles={filteredVehicles} substituteRoutes={substituteRoutes}
+                                    setSubstituteRoutes={setSubstituteRoutes}/>
+                    <br/>
+                </div>
+                {vehicles && vehicles.length !== 0 &&
                 <VehicleTableFilter
                     data={getVehiclesByIds()}
                     requiredCapacity={substituteRoutes.minimalCapacity}
                 />
-            }
-
+                }
+            </PermissionsGate>
             <div className="container-flex">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth={true}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        onClick={handleSubmit}
+                    >
+                        Save
+                    </Button>
+                </PermissionsGate>
                 <Button
                     type="submit"
                     variant="contained"
@@ -205,15 +210,17 @@ function SubstituteRoutesForm({isNew, match, history}) {
                     fullWidth={true}
                     onClick={() => history.push("/substitute-route")}
                 >Back</Button>
-                {!isNew && <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    fullWidth={true}
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>}
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    {!isNew && <Button
+                        type="submit"
+                        variant="contained"
+                        color="default"
+                        fullWidth={true}
+                        onClick={handleDelete}
+                    >
+                        Delete
+                    </Button>}
+                </PermissionsGate>
             </div>
             {!isNew && <MapComponent markers={getMarkers(substituteRoutes.sections)}
                                      separatePaths={getRoutesBetween(substituteRoutes.sections)} dynamic/>}
