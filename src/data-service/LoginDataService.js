@@ -6,8 +6,8 @@ const login = async (credentials) => {
     return axios(optionsPost(credentials, "/api/user/login"))
         .then((res) => {
             localStorage.setItem("token", res.headers.authorization);
-            sessionStorage.setItem('user', res.data)
-            sessionStorage.setItem('role', res.data.role)
+            localStorage.setItem('user', res.data)
+            localStorage.setItem('role', res.data.role)
         })
         .catch((error) => {
             console.error(error);
@@ -21,8 +21,6 @@ const loginStatus = () => {
 
 const logout = () => {
     localStorage.clear();
-    sessionStorage.removeItem('user')
-    sessionStorage.removeItem('role')
 };
 
 export {login, logout, loginStatus};

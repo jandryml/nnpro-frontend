@@ -30,6 +30,7 @@ export default function SubstituteRoutesTable({data}) {
                     <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Concerned train route</TableCell>
+                        <TableCell>Valid</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -42,6 +43,7 @@ export default function SubstituteRoutesTable({data}) {
                                       to={`/substitute-route/detail/${row.id}`}>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.concernedTrainRoute.trainCode}</TableCell>
+                                <TableCell>{row.validated ? "True" : "False"}</TableCell>
                             </TableRow>
                         ))}
                 </TableBody>

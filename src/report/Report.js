@@ -4,14 +4,14 @@ import {SCOPES} from "../permission-provider/permission-maps";
 import PermissionsGate from "../permission-provider/PermissionGate";
 
 class Report extends React.Component {
-    downloadChauffeursReport = () => {
-        fetch('http://localhost:8080/api/report/chauffeurs')
+    downloadVehiclesReport = () => {
+        fetch('http://localhost:8080/api/report/vehicles')
             .then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
                     let a = document.createElement('a');
                     a.href = url;
-                    a.download = `Chauffeurs_${new Date(Date.now()).toISOString()}.xlsx`
+                    a.download = `Vehicles_${new Date(Date.now()).toISOString()}.xlsx`
                     a.click();
                 });
             });
@@ -36,8 +36,8 @@ class Report extends React.Component {
             <div>
                 <PermissionsGate scopes={[SCOPES.admin]} showError img>
                     <div>
-                        <label>Generate driver report: </label>
-                        <Button onClick={this.downloadChauffeursReport}>Generate</Button>
+                        <label>Generate vehicles report: </label>
+                        <Button onClick={this.downloadVehiclesReport}>Generate</Button>
                     </div>
                     <div>
                         <label>Generate incident report: </label>

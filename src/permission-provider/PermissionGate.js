@@ -12,10 +12,8 @@ const hasPermission = ({permissions, scopes}) => {
 };
 
 export default function PermissionsGate({children, scopes = [], showError = false, img = false}) {
-    const role = sessionStorage.getItem('role');
+    const role = localStorage.getItem('role');
     const permissions = PERMISSIONS[role];
-    console.log(role)
-    console.log(permissions)
     const permissionGranted = hasPermission({permissions, scopes});
 
     if (!permissionGranted && showError) return <>

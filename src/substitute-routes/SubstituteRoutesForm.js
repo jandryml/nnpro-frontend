@@ -67,7 +67,7 @@ function SubstituteRoutesForm({isNew, match, history}) {
     }, []);
 
     const handleSubmit = () => {
-        saveSubstituteRoute({...substituteRoutes, sections: substituteRouteSection}).then((res) => {
+        saveSubstituteRoute({...substituteRoutes, sections: substituteRouteSection, validated: true}).then((res) => {
             if (res) {
                 history.push("/substitute-route");
                 ToastInfo("Substitute route successfully created");

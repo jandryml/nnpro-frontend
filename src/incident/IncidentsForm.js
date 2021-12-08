@@ -23,9 +23,10 @@ makeStyles((theme) => ({
     },
 }));
 
-const getDateTime = () => {
+const getDateTime = (days = 0) => {
     let newDate = new Date()
     newDate.addHours(1)
+    newDate.addHours(24 * days)
     return newDate.toISOString().substring(0, 17) + "00"
 }
 
@@ -51,7 +52,7 @@ function IncidentsForm({isNew, match, history}) {
         //     id: 1
         // },
         startDate: getDateTime(),
-        endDate: getDateTime()
+        endDate: getDateTime(7)
     });
 
     useEffect(() => {

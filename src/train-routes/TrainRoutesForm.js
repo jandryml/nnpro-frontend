@@ -13,6 +13,7 @@ import {MapComponent} from "../components/MapComponent";
 import {getMarkers, getRoutesBetween} from "../components/MapDataParser";
 import {SCOPES} from "../permission-provider/permission-maps";
 import PermissionsGate from "../permission-provider/PermissionGate";
+import {saveSubstituteRoute} from "../data-service/SubstituteRouteDataService";
 
 makeStyles((theme) => ({
     container: {
@@ -62,6 +63,26 @@ function TrainRoutesForm({isNew, match, history}) {
                 history.push("/train-route");
                 ToastInfo("Train route successfully removed");
             }
+        });
+    };
+
+    const handleManualSubRouteCreation = () => {
+        let subRoute = {
+            id: -1,
+            name: `Manual sub route for ${trainRoutes.trainCode ? trainRoutes.trainCode : ''}`,
+            trainRouteId: trainRoutes.id,
+            validated: false,
+            minimalCapacity: trainRoutes.capacity,
+            sections: trainRoutes.sections ? trainRoutes.sections : [],
+            vehicles: []
+        }
+        saveSubstituteRoute(subRoute).then((res) => {
+            if (res) {
+                ToastInfo("Substitute route successfully created");
+            }
+        }).catch((error) => {
+            console.log(error.response.data.message);
+            ToastError(error.response.data.message);
         });
     };
 
@@ -145,6 +166,19 @@ function TrainRoutesForm({isNew, match, history}) {
                         </Button>}
                     </PermissionsGate>
                 </div>
+            <div className="container-flex">
+                <PermissionsGate scopes={[SCOPES.admin]}>
+                    {!isNew && <Button
+                        type="submit"
+                        variant="contained"
+                        color="default"
+                        fullWidth={true}
+                        onClick={handleManualSubRouteCreation}
+                    >
+                        Generate substitute route
+                    </Button>}
+                </PermissionsGate>
+            </div>
             {!isNew && <MapComponent markers={getMarkers(trainRoutes.sections)}
                                      separatePaths={getRoutesBetween(trainRoutes.sections)}/>}
         </div>

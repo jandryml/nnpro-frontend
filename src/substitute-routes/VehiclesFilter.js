@@ -40,7 +40,7 @@ function VehiclesFilter({vehicles, substituteRoutes, setSubstituteRoutes}) {
                     vehicles
                         .map((vehicle) => (
                             <MenuItem key={vehicle.id}
-                                      value={vehicle.id}>{vehicle.name}</MenuItem>
+                                      value={vehicle.id}>{`${vehicle.name} - ${vehicle.capacity}`}</MenuItem>
                         ))}
             </Select>
         </FormControl>
