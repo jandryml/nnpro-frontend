@@ -5,8 +5,12 @@ import PermissionsGate from "../permission-provider/PermissionGate";
 
 class Report extends React.Component {
     downloadVehiclesReport = () => {
-        fetch('http://localhost:8080/api/report/vehicles')
-            .then(response => {
+        const token = localStorage.getItem("token");
+        fetch('http://localhost:8080/api/report/vehicles', {
+            headers: {
+                'Authorization': `${token}`
+            }
+        }).then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
                     let a = document.createElement('a');
@@ -18,8 +22,12 @@ class Report extends React.Component {
     }
 
     downloadIncidentsReport = () => {
-        fetch('http://localhost:8080/api/report/incidents')
-            .then(response => {
+        const token = localStorage.getItem("token");
+        fetch('http://localhost:8080/api/report/incidents', {
+            headers: {
+                'Authorization': `${token}`
+            }
+        }).then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
                     let a = document.createElement('a');
